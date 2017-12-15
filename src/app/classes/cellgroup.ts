@@ -12,13 +12,22 @@ export class CellGroup {
         this.solver1();
         this.solver2();
         this.solver3();
+        this.solver4();
+        
+        // Value exists in one cell only
+
     }
     // If cell in cell group has only one possible value in any cell, other cells in cellgroup
     // should clear it out
     solver1 () {
+        var value = 0;
         for(let i = 0; i < 9; i++) {
             if (this.cells[i].pvals.length === 1) {
+                // TODO: Is there a nicer way to do this?
+                //this.cells[i].pvals.toString();
+                this.cells[i].value = +this.cells[i].pvals.toString();
                 let value = this.cells[i].value;
+
                 this.removePvalFromOtherCells(i,value);
             }
         }
@@ -49,6 +58,9 @@ export class CellGroup {
                 }
             }
         }
+    }
+    // Pval exists in one cell only
+    solver4 () {
     }
     //-------------------------------------------------------------------------------------------
     whatCellsHaveSamePvals(pvals : number[] ) : number[] {
