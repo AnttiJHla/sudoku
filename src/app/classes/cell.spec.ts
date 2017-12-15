@@ -4,8 +4,8 @@ describe('Cell', () => {
     let cell0 : Cell;
     let cell1 : Cell;
     beforeEach(()=> {
-        cell0 = new Cell(0);
-        cell1 = new Cell(1);
+        cell0 = new Cell(0,0,0);
+        cell1 = new Cell(1,0,0);
     });
 
     it('when cell has 0 as init value, it should have 9 possible values', () => {

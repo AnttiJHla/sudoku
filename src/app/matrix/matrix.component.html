@@ -2,10 +2,12 @@
 
   <div class="matrix">
       <div *ngFor="let cells_on_row of matrix.cells; let row_index = index">
-        <div class="cell"   [ngClass]="getCellClass(cell)" *ngFor="let cell of cells_on_row; let col_index = index">
+        <div class="cell"  [ngClass]="getCellClass(cell)" *ngFor="let cell of cells_on_row; let col_index = index">
           <div *ngIf="cell.value === 0" class="cell-pvals">{{cell.pvals}}</div>
           <!--div *ngIf="cell.pvals.length > 1" class="cell-pvals">{{cell.pvals}}</div-->
-          <div *ngIf="cell.value != 0" class="cell-value">{{cell.value}}</div>
+          <div *ngIf="cell.value != 0" class="cell-value" >
+            {{cell.value}}
+          </div>
             <!--input type="text" *ngIf="cell.value != 0" class="cell-value">{{cell.value}}</input-->
           </div>
       </div>

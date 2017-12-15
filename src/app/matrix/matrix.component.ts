@@ -33,6 +33,20 @@ export class MatrixComponent implements OnInit {
     0,0,0, 0,0,0, 0,0,0,
 
   ];
+  matrixVals_l5 : number [] = [
+    0,1,0, 0,0,0, 5,0,2,
+    4,0,0, 0,0,0, 9,0,0,
+    0,0,3, 9,0,0, 0,7,0,
+
+    0,0,4, 0,1,9, 6,0,0,
+    5,0,0, 0,0,0, 0,0,8,
+    0,0,6, 4,2,0, 3,0,0,
+
+    0,4,0, 0,0,2, 8,0,0,
+    0,0,2, 0,0,0, 0,0,3,
+    3,0,9, 0,0,0, 0,1,0,
+
+  ];
   matrixVals_l2 : number [] = [
     2,8,0, 0,0,0, 4,0,0,
     3,0,0, 0,2,0, 0,9,0,
@@ -47,7 +61,22 @@ export class MatrixComponent implements OnInit {
     0,0,9, 0,0,0, 0,6,2,
 
   ];
-  matrix : Matrix = new Matrix (this.matrixVals_l2);
+  matrixVals_l3 : number [] = [
+    6,0,0, 1,0,9, 0,7,0,
+    0,0,0, 0,0,0, 2,9,0,
+    9,0,0, 7,0,0, 4,0,8,
+
+    0,0,0, 3,0,1, 0,0,5,
+    0,3,0, 0,9,0, 0,1,0,
+    1,0,0, 5,0,2, 0,0,0,
+
+    7,0,2, 0,0,8, 0,0,4,
+    0,9,6, 0,0,0, 0,0,0,
+    0,1,0, 2,0,3, 0,0,9,
+
+  ];
+
+  matrix : Matrix = new Matrix (this.matrixVals_l5);
 
 
 
@@ -61,6 +90,11 @@ export class MatrixComponent implements OnInit {
     var retVal : string[] = [];
     var rowList = [1,2,3,7,8,9];
     var tmp=true;
+
+    if (cell.initialized) {
+      retVal.push("cell-initialized");
+    }
+
     if (rowList.includes(cell.row)) {
       tmp = !tmp;      
     }

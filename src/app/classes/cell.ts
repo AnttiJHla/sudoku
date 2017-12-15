@@ -8,6 +8,7 @@ export class Cell {
     pvals : number[] = []; // Possible values
     row : number;
     col : number;
+    initialized : boolean = false;
 
     constructor(value: number, row : number, col : number )
     {
@@ -18,6 +19,7 @@ export class Cell {
                 this.pvals = [1,2,3,4,5,6,7,8,9];
             } else{
                 this.pvals = [value];
+                this.initialized = true;
             }
        }    
 }
