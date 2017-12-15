@@ -9,9 +9,11 @@ export class Cell {
     row : number;
     col : number;
 
-    constructor(value: number        
-      ) {
+    constructor(value: number, row : number, col : number )
+    {
             this.value = value;
+            this.col = col;
+            this.row = row;
             if (value === 0){
                 this.pvals = [1,2,3,4,5,6,7,8,9];
             } else{

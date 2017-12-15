@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
+import { MatrixComponent } from './matrix/matrix.component';
 const routes: Routes = [
-  {
-    path: '',
-    children: []
-  }
+    { path: '', redirectTo: '/matrix', pathMatch: 'full' },
+    { path: 'matrix',  component: MatrixComponent }
+
 ];
 
 @NgModule({
