@@ -4,16 +4,19 @@ export class CellGroup {
     cells : Cell [] = [];
     uvals : number [] = []; // Values already used on this row
     solver_value = 0;
+
+    // Dummy array to be used to replace for loops...
+    values = [1,2,3,4,5,6,7,8,9];
     
     constructor(
     ) {
      }    
 
      solve () {
-        this.solver1();
-        this.solver2();
-        this.solver3();
-        this.solver4();
+        this.cells.forEach(this.solver1, this);
+        this.cells.forEach(this.solver2, this);
+        this.cells.forEach(this.solver3, this);
+        this.values.forEach(this.solver4, this);
         this.solver5();
         
         // Value exists in one cell only
@@ -22,63 +25,51 @@ export class CellGroup {
     // If cell in cell group has only one possible value in any cell, other cells in cellgroup
     // should clear it out
 
-    // function could use ARRAY:FOREACH -function call
-    solver1 () {
-        console.log("Solver 1:");
-        var value = 0;
-        for (let i = 0; i < 9; i++) {
-            if ( this.cells[i].pvals.length === 1 ) {
-                // TODO: Is there a nicer way to do this?
-                //this.cells[i].pvals.toString();
-                this.cells[i].value = +this.cells[i].pvals.toString();                
-                let value = this.cells[i].value;
-
-                this.removePvalFromOtherCells(i,value);
-            }
+    solver1 ( cell : Cell, index : number, arr : Cell[] ) {
+        if ( cell.pvals.length === 1 ) {
+            // TODO: Is there a nicer way to do this?
+            cell.value = +cell.pvals.toString();                
+            this.removePvalFromOtherCells(index, cell.value);
         }
     }
+    // ========================================================================
     // If 2 values are present in two cells only, those values should be cleared 
     // from other cells
     // Is there a 2nd case for this solver also..?
-    solver2 () {
+    solver2 ( cell : Cell, index : number, arr : Cell[] ) {
         var cellIndexes=[];
-        for(let i = 0; i < 9; i++) {
-            if (this.cells[i].pvals.length === 2) {
-                cellIndexes = this.whatCellsHaveSamePvals(this.cells[i].pvals);
-                if (cellIndexes.length===2) {
-                    this.removePvalsFromOtherCells(cellIndexes, this.cells[i].pvals);
-                }
+        if ( cell.pvals.length === 2 ) {
+            cellIndexes = this.whatCellsHaveSamePvals(cell.pvals);
+            if ( cellIndexes.length === 2 ) {
+                this.removePvalsFromOtherCells(cellIndexes, cell.pvals);
             }
         }
     }
+    // ========================================================================
     // If 3 values are present in three cells only, those values should be cleared 
     // from other cells
-    solver3 () {
-        var cellIndexes=[];
-        for(let i = 0; i < 9; i++) {
-            if (this.cells[i].pvals.length === 3) {
-                cellIndexes = this.whatCellsHaveSamePvals(this.cells[i].pvals);
-                if (cellIndexes.length===3) {
-                    this.removePvalsFromOtherCells(cellIndexes, this.cells[i].pvals);
-                }
+    solver3 ( cell : Cell, index : number, arr : Cell[] ) {
+        var cellIndexes = [];
+        if ( cell.pvals.length === 3 ) {
+            cellIndexes = this.whatCellsHaveSamePvals( cell.pvals );
+            if (cellIndexes.length === 3) {
+                this.removePvalsFromOtherCells(cellIndexes, cell.pvals);
             }
         }
     }
+    // ========================================================================
     // Pval exists in one cell only
-    solver4 () {
-        var value = 0;
-
+    solver4 (value : number, index : number, arr : number[]) {
         // if value can be found in one cell only and that cell has multiple
         // pvals, other pvals should be cleaned from it.
-        for( let value = 1; value <= 9; value++ ) {
-            let cells_tmp = this.whatCellsHavePval(value);
-            if (cells_tmp.length === 1 ) {
-                if (cells_tmp[0].pvals.length > 1) {
-                    cells_tmp[0].pvals=[value];                    
-                }
+        let cells_tmp = this.whatCellsHavePval(value);
+        if (cells_tmp.length === 1 ) {
+            if (cells_tmp[0].pvals.length > 1) {
+                cells_tmp[0].pvals = [value];                    
             }
         }
     }
+    // ========================================================================
     // If 2 values do not exist in more than 2 cells, other pvals
     // should be cleared also from these cells
     solver5 () {
@@ -124,7 +115,7 @@ export class CellGroup {
         for (let value of possibleValues) { // Value only in two cells
             if ( value !== value1 ) {
                 if (this.isValueValidInBothCells(value, cells)) {
-                        matchingPair.push(value);                    
+                    matchingPair.push(value);                    
                 }
             }
         }
@@ -150,7 +141,7 @@ export class CellGroup {
         return ret;
     }
     //-------------------------------------------------------------------------------------------
-    whatCellsHavePval(value) : Cell []{
+    whatCellsHavePval( value ) : Cell []{
         var ret : Cell [] = []
         for(let cell of this.cells) {
             if (cell.pvals.includes(value)){
@@ -161,9 +152,9 @@ export class CellGroup {
     }
     //-------------------------------------------------------------------------------------------
 
-    whatCellsHaveSamePvals(pvals : number[] ) : number[] {
+    whatCellsHaveSamePvals( pvals : number[] ) : number[] {
         var ret = [];
-        for(let i = 0; i < 9; i++) {
+        for( let i = 0; i < 9; i++ ) {
             if (this.cells[i].pvals.toString() === pvals.toString()) {
                 ret.push(i);
             }
@@ -171,8 +162,8 @@ export class CellGroup {
         return ret;
     }
     //-------------------------------------------------------------------------------------------
-    removePvalsFromOtherCells (cellIndexes:number[], values:number[]) {
-        for(let i = 0; i < 9; i++) {
+    removePvalsFromOtherCells ( cellIndexes : number [], values : number [] ) {
+        for( let i = 0; i < 9; i++ ) {
             if (cellIndexes.indexOf(i) < 0) {
                 for (var value of values){
                     this.removePvalFromCell(i,value);                    
@@ -181,28 +172,26 @@ export class CellGroup {
         }
     }
     //-------------------------------------------------------------------------------------------
-    removePvalFromOtherCells (index, value) {
-        for(let i = 0; i < 9; i++) {
+    removePvalFromOtherCells ( index, value ) {
+        for( let i = 0; i < 9; i++ ) {
             if (i != index) {
-                this.removePvalFromCell(i,value);
+                this.removePvalFromCell( i, value );
             }
         }
     }
     //-------------------------------------------------------------------------------------------
-    removePvalFromCell(index, value) {
+    //removePvalFromCell (cell : Cell, index : number, arr : Cell[]) {
+    removePvalFromCell( index, value ) {
         var x = this.cells[index].pvals.indexOf(value);
         if (x > -1) {
             this.cells[index].pvals.splice(x,1);
         }
+        // Creates a new array of existing array for change detection
+        this.cells[index].pvals = this.cells[index].pvals.filter(this.checkTrue);
     }
     //-------------------------------------------------------------------------------------------
-    // This should be used to clear all other elements from array
-    //-------------------------------------------------------------------------------------------
-    removeAllOtherPvalsFromCellExcept(cell, value) {
-        var x = cell.pvals.indexOf(value);
-        //if (x > -1) {
-        //    this.cells[index].pvals.splice(x,1);
-        //}
+    checkTrue( value : number ){
+        return true;
     }
 
    
