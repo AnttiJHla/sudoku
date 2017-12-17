@@ -1,5 +1,6 @@
 import { NgZone, Component, Input, OnInit } from '@angular/core';
 import { Matrix } from '../classes/matrix';
+
 import { Cell } from '../classes/cell';
 @Component({
   selector: 'app-matrix',

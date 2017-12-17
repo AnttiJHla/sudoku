@@ -1,3 +1,10 @@
-<p>
-  cell works!
-</p>
+<div class="cell" [ngClass]="getCellClass(cell)">
+  <div *ngIf="cell.value === 0" class="cell-pvals">
+    {{cell.pvals}}
+  </div>
+  <!--div *ngIf="cell.pvals.length > 1" class="cell-pvals">{{cell.pvals}}</div-->
+  <div *ngIf="cell.value != 0" class="cell-value" >
+    {{cell.value}}
+  </div>
+    <!--input type="text" *ngIf="cell.value != 0" class="cell-value">{{cell.value}}</input-->
+</div>
