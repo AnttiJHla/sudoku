@@ -16,7 +16,11 @@ export class Cell {
             this.col = col;
             this.row = row;
             if (value === 0){
-                this.pvals = [1,2,3,4,5,6,7,8,9];
+                this.pvals = [];
+                for ( let i = 1; i <= 9; i++ ) {                    
+                    this.pvals.push(i);
+                }
+
             } else{
                 this.pvals = [value];
                 this.initialized = true;

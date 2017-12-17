@@ -18,10 +18,17 @@ export class Matrix {
                 this.addCellToCellGroups(this.cells[row][col]);
             }
         }        
+        /*
         this.solve();
         while (!this.matrixHasBeenSolved()) {
             this.solve();            
         }
+        this.solve();            
+        this.solve();            
+        this.solve();            
+        this.solve();            
+        this.solve();            
+        */
     }
 
     matrixHasBeenSolved(  ) : boolean {
@@ -38,13 +45,13 @@ export class Matrix {
     }
 
       initCellGroups(  ) {
-        for ( let i = 0; i < 9; i++ ) {
-            console.log("Block num: " + i);
-            this.rowGroups[i+1] = new CellGroup();
-            this.colGroups[i+1] = new CellGroup();
-            this.blockGroups[i+1] = new CellGroup();
+        for ( let i = 1; i <= 9; i++ ) {
+            this.rowGroups[i] = new CellGroup();
+            this.colGroups[i] = new CellGroup();
+            this.blockGroups[i] = new CellGroup();
         }
       }
+
       addCellToCellGroups( cell : Cell ) {
         var x = this.getBlockGroupOfCell(cell);
         console.log("Adding cell to cell groups");
@@ -61,12 +68,19 @@ export class Matrix {
       }
 
       solve(){
-        for ( let i = 0; i < 9; i++ ) {
+        for ( let i = 1; i <= 9; i++ ) {
             console.log("Block num: " + i);
-            this.rowGroups[i+1].solve();
-            this.colGroups[i+1].solve();
-            this.blockGroups[i+1].solve();
+            this.rowGroups[i].solve();
+            this.colGroups[i].solve();
+            this.blockGroups[i].solve();
         }
       }
+
+      writeLog(){
+          console.log("Writing log: " + 
+          this.cells[1][1].pvals.toString());
+          this.cells[1][1].pvals.push(10);
+          this.cells[1][1].pvals.pop();
+        }
       
 }

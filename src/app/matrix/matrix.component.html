@@ -1,8 +1,19 @@
 <div class="container">
-
+  <div class="matrix-menu">
+      <button (click)="solve()">Ratkaise </button>
+      <button (click)="writeLog()">Logita pvals </button>
+      <br>
+      pvals for cell 1,1:
+      <div> {{ matrix.cells[0][0].pvals}}
+        </div>
+        pvals for cell 2,2:
+        <div> {{ matrix.cells[1][1].pvals}}
+          </div>  
+  </div>
+    
   <div class="matrix">
-      <div *ngFor="let cells_on_row of matrix.cells; let row_index = index">
-        <div class="cell"  [ngClass]="getCellClass(cell)" *ngFor="let cell of cells_on_row; let col_index = index">
+      <div *ngFor="let cells_on_row of matrix.cells">
+        <div class="cell" [ngClass]="getCellClass(cell)" *ngFor="let cell of cells_on_row">
           <div *ngIf="cell.value === 0" class="cell-pvals">{{cell.pvals}}</div>
           <!--div *ngIf="cell.pvals.length > 1" class="cell-pvals">{{cell.pvals}}</div-->
           <div *ngIf="cell.value != 0" class="cell-value" >
