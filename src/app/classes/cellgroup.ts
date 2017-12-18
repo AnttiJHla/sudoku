@@ -22,13 +22,13 @@ export class CellGroup {
         // Value exists in one cell only
 
     }
+    // ========================================================================
     // If cell in cell group has only one possible value in any cell, other cells in cellgroup
     // should clear it out
-
     solver1 ( cell : Cell, index : number, arr : Cell[] ) {
         if ( cell.pvals.length === 1 ) {
             // TODO: Is there a nicer way to do this?
-            cell.value = +cell.pvals.toString();                
+            cell.value = +cell.pvals.toString();
             this.removePvalFromOtherCells(index, cell.value);
         }
     }
@@ -95,17 +95,12 @@ export class CellGroup {
                 if (matchingPair.length === 2) {
                     console.log("Found mathing pair:" + matchingPair.toString());
                     console.log("");
-                    cells[0].pvals = [];
-                    cells[0].pvals.push(matchingPair[0]);
-                    cells[0].pvals.push(matchingPair[1]);
-                    cells[1].pvals = [];
-                    cells[1].pvals.push(matchingPair[0]);
-                    cells[1].pvals.push(matchingPair[1]);
+                    cells[0].pvals = [].concat(matchingPair);
+                    cells[1].pvals = [].concat(matchingPair);
                 }
             }
         }
     }
-    //-------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------
     checkIfCellsMatchAsPair(cells : Cell[], value1, possibleValues ) : number [] {
         // Check if both cells contain, some other value in the list
@@ -124,10 +119,6 @@ export class CellGroup {
     //-------------------------------------------------------------------------------------------
     isValueValidInBothCells(value : number, cell : Cell[]) : boolean {
         return cell[0].pvals.includes(value) && cell[1].pvals.includes(value);
-    }
-    //-------------------------------------------------------------------------------------------
-    isValueValidInCell(cell : Cell) : boolean {
-        return cell.pvals.includes(this.solver_value);
     }
     //-------------------------------------------------------------------------------------------
     whatValuesExistInTwoCellsOnly() : number []{
@@ -187,12 +178,6 @@ export class CellGroup {
             this.cells[index].pvals.splice(x,1);
         }
         // Creates a new array of existing array for change detection
-        this.cells[index].pvals = this.cells[index].pvals.filter(this.checkTrue);
-    }
-    //-------------------------------------------------------------------------------------------
-    checkTrue( value : number ){
-        return true;
-    }
-
-   
+        this.cells[index].pvals = [].concat(this.cells[index].pvals);
+    }   
 }
