@@ -1,12 +1,11 @@
 <div class="container">
   <div class="matrix-menu">
       <button (click)="solve()">Ratkaise </button>
-      <button (click)="writeLog()">Logita pvals </button>
   </div>
     
   <div class="matrix">
       <div *ngFor="let cells_on_row of matrix.cells">
-        <app-cell class="cell" *ngFor="let cell of cells_on_row" [cell]="cell" [pvals]="cell.pvals">
+        <app-cell class="cell" *ngFor="let cell of cells_on_row" [cell]="cell" [value]="cell.value" >
         </app-cell>
       </div>
 

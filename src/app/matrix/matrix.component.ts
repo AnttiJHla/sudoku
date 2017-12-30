@@ -23,6 +23,34 @@ export class MatrixComponent implements OnInit {
     0,0,0, 0,0,0, 0,0,0,
 
   ];
+  matrixVals_l5_4 : number [] = [
+    5,0,3, 0,1,0, 0,0,0,
+    0,0,0, 0,0,0, 2,0,0,
+    8,0,0, 9,0,7, 0,0,4,
+
+    0,0,8, 0,0,0, 0,0,5,
+    0,6,5, 0,0,0, 8,1,0,
+    2,0,0, 0,0,0, 4,0,0,
+
+    4,0,0, 8,0,6, 0,0,7,
+    0,0,6, 0,0,0, 0,0,0,
+    0,0,0, 0,3,0, 1,0,2,
+
+  ];
+  matrixVals_l5_3 : number [] = [
+    6,0,8, 0,0,4, 2,0,0,
+    2,0,7, 0,0,0, 0,0,9,
+    1,5,0, 0,0,2, 0,0,0,
+
+    0,0,6, 5,0,0, 0,0,0,
+    0,0,0, 9,0,1, 0,0,0,
+    0,0,0, 0,0,8, 6,0,0,
+
+    0,0,0, 1,0,0, 0,4,2,
+    7,0,0, 0,0,0, 3,0,5,
+    0,0,1, 8,0,0, 9,0,6,
+
+  ];
   matrixVals_l5 : number [] = [
     0,1,0, 0,0,0, 5,0,2,
     4,0,0, 0,0,0, 9,0,0,
@@ -82,7 +110,7 @@ export class MatrixComponent implements OnInit {
 
 
   @Input()
-  matrix : Matrix = new Matrix (this.matrixVals_l5);
+  matrix : Matrix = new Matrix (this.matrixVals_l5_4);
 
 
 
@@ -119,19 +147,8 @@ export class MatrixComponent implements OnInit {
   solve () {
     this.matrix.solve();
 
-    this.ensureThatChangesDetected();
   }
 
-  ensureThatChangesDetected(){
-
-    for ( let row = 0; row < 9; row++) {
-      for ( let col = 0; col < 9; col++) {
-        var x = this.matrix.cells[row][col].value;
-        this.matrix.cells[row][col].value = 10;
-        this.matrix.cells[row][col].value = x;
-      }
-    }
-  }
 
   writeLog () {
     this.matrix.writeLog();
