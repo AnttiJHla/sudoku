@@ -133,16 +133,12 @@ export class CellGroup {
     }
     //-------------------------------------------------------------------------------------------
     whatCellsHavePval( value ) : Cell []{
-        var ret : Cell [] = []
-        for(let cell of this.cells) {
-            if (cell.pvals.includes(value)){
-                ret.push(cell);                
+        return this.cells.filter( function(cell, index) {            
+                return (cell.pvals.includes(value))
             }
-        }            
-        return ret;
+        );    
     }
     //-------------------------------------------------------------------------------------------
-
     whatCellsHaveSamePvals( pvals : number[] ) : number[] {
         var ret = [];
         for( let i = 0; i < 9; i++ ) {
