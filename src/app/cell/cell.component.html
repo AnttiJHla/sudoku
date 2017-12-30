@@ -1,10 +1,11 @@
 <div class="cell" [ngClass]="getCellClass(cell)">
   <div *ngIf="cell.value === 0" class="cell-pvals">
-    {{cell.pvals}}
+      <button type="button" *ngFor="let pval of cell.pvals" (click)="setValue(pval, $event)">
+          {{pval}}    
+      </button>
   </div>
-  <!--div *ngIf="cell.pvals.length > 1" class="cell-pvals">{{cell.pvals}}</div-->
   <div *ngIf="cell.value != 0" class="cell-value" >
-    {{cell.value}}
+      {{cell.value}}
+      
+    </div>
   </div>
-    <!--input type="text" *ngIf="cell.value != 0" class="cell-value">{{cell.value}}</input-->
-</div>

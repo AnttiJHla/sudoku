@@ -26,4 +26,5 @@ export class Cell {
                 this.initialized = true;
             }
        }    
+           
 }
