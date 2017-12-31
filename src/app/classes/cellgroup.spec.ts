@@ -121,6 +121,161 @@ describe('CellGroup', () => {
         expect(cg1.cells[7].pvals).toContain(6);
     });
 
+    it(`solver6 should work as expected`, () => {
+        // Two values in two cells improved
+        let cg1 = new CellGroup();
+        // Initializing empty cells
+        for (let i = 1; i<=9; i++) {
+            let cell = new Cell(0,1,i);
+            cg1.cells.push(cell);
+        }
+
+        cg1.cells[0].value = 4;
+        cg1.cells[3].value = 8;
+        cg1.cells[5].value = 6;
+        cg1.cells[8].value = 7;
+
+        cg1.cells[0].pvals = [4];
+        cg1.cells[1].pvals = [1,2,3,5];
+        cg1.cells[2].pvals = [1,2];
+        cg1.cells[3].pvals = [8];
+        cg1.cells[4].pvals = [2,9];
+        cg1.cells[5].pvals = [6];
+        cg1.cells[6].pvals = [3,5,9];
+        cg1.cells[7].pvals = [3,5,9];
+        cg1.cells[8].pvals = [7];
+
+        cg1.values.forEach(cg1.solver6, cg1);
+        
+        expect(cg1.isRowGroup()).toBe(true);
+
+        expect(cg1.cells[1].rowValues).toContain(1);
+        expect(cg1.cells[2].rowValues).toContain(1);
+        
+        
+    });
+
+    it(`should be able to remove pvals from other rows of a block group`, () => {
+        let cg1 = new CellGroup();
+        let cells1 : Cell [] = [];
+
+        let cell1 = new Cell(0,1,1);
+        let cell2 = new Cell(0,1,2);
+        let cell3 = new Cell(0,1,3);
+
+        let cell4 = new Cell(0,2,1);
+        let cell5 = new Cell(0,2,2);
+        let cell6 = new Cell(0,2,3);
+
+        let cell7 = new Cell(0,3,1);
+        let cell8 = new Cell(0,3,2);
+        let cell9 = new Cell(0,3,3);
+
+        cg1.cells.push(cell1);
+        cg1.cells.push(cell2);
+        cg1.cells.push(cell3);
+        cg1.cells.push(cell4);
+        cg1.cells.push(cell5);
+        cg1.cells.push(cell6);
+        cg1.cells.push(cell7);
+        cg1.cells.push(cell8);
+        cg1.cells.push(cell9);
+
+        cell2.rowValues.push(1);
+        cell3.rowValues.push(1);
+
+        cg1.cells.forEach(cg1.solver7_row_values, cg1);
+        expect(cg1.cells[3].pvals).not.toContain(1);
+        expect(cg1.cells[4].pvals).not.toContain(1);
+        expect(cg1.cells[5].pvals).not.toContain(1);
+        expect(cg1.cells[6].pvals).not.toContain(1);
+        expect(cg1.cells[7].pvals).not.toContain(1);
+        expect(cg1.cells[8].pvals).not.toContain(1);
+
+
+    });
+    it(`should be able to remove pvals from other cols of a block group`, () => {
+        let cg1 = new CellGroup();
+        let cells1 : Cell [] = [];
+
+        let cell1 = new Cell(0,1,1);
+        let cell2 = new Cell(0,1,2);
+        let cell3 = new Cell(0,1,3);
+
+        let cell4 = new Cell(0,2,1);
+        let cell5 = new Cell(0,2,2);
+        let cell6 = new Cell(0,2,3);
+
+        let cell7 = new Cell(0,3,1);
+        let cell8 = new Cell(0,3,2);
+        let cell9 = new Cell(0,3,3);
+
+        cg1.cells.push(cell1);
+        cg1.cells.push(cell2);
+        cg1.cells.push(cell3);
+        cg1.cells.push(cell4);
+        cg1.cells.push(cell5);
+        cg1.cells.push(cell6);
+        cg1.cells.push(cell7);
+        cg1.cells.push(cell8);
+        cg1.cells.push(cell9);
+
+        cell1.colValues.push(1);
+
+        cg1.cells.forEach(cg1.solver7_col_values, cg1);
+        expect(cg1.cells[1].pvals).not.toContain(1);
+        expect(cg1.cells[2].pvals).not.toContain(1);
+        expect(cg1.cells[4].pvals).not.toContain(1);
+        expect(cg1.cells[5].pvals).not.toContain(1);
+        expect(cg1.cells[7].pvals).not.toContain(1);
+        expect(cg1.cells[8].pvals).not.toContain(1);
+
+    });
+
+    it(`should be able to check block group of cell`, () => {
+        // Two values in two cells improved
+        let cg1 = new CellGroup();
+
+        let cell1 = new Cell(0,1,1);
+        let cell2 = new Cell(0,1,2);
+        let cell3 = new Cell(0,9,9);
+
+        expect(cg1.getBlockGroupOfCell(cell1)).toBe(1);       
+        expect(cg1.getBlockGroupOfCell(cell2)).toBe(1);       
+        expect(cg1.getBlockGroupOfCell(cell3)).toBe(9);       
+    });
+
+    it(`should be able to check if cells are in same block`, () => {
+        // Two values in two cells improved
+        let cg1 = new CellGroup();
+        let cells1 : Cell [] = [];
+
+        let cell1 = new Cell(0,1,1);
+        let cell2 = new Cell(0,1,2);
+        let cell3 = new Cell(0,9,9);
+
+        cells1.push(cell1);
+        cells1.push(cell2);
+
+        expect(cg1.allCellsInSameBlock(cells1)).toBe(true);       
+    });
+
+    it(`should be able to check if cells are in different block`, () => {
+        // Two values in two cells improved
+        let cg1 = new CellGroup();
+        let cells2 : Cell [] = [];
+
+        let cell1 = new Cell(0,1,1);
+        let cell3 = new Cell(0,9,9);
+
+
+        cells2.push(cell1);
+        cells2.push(cell3);
+
+        expect(cg1.allCellsInSameBlock(cells2)).toBe(false);       
+        
+    });
+
     
 
 });

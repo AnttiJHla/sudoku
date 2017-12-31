@@ -1,11 +1,14 @@
-import { CellGroup } from '../classes/cellgroup';
+//import { CellGroup } from '../classes/cellgroup';
 
 export class Cell {
     value : number = 0;
-    rowgrp: CellGroup;
-    colgrp: CellGroup;
-    blockgrp: CellGroup;
+    // rowgrp: CellGroup;
+    // colgrp: CellGroup;
+    // blockgrp: CellGroup;
     pvals : number[] = []; // Possible values
+
+    rowValues : number[] = []; // Values on this row only
+    colValues : number[] = []; // Values on this col only
     row : number;
     col : number;
     initialized : boolean = false;

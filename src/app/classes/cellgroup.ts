@@ -18,6 +18,10 @@ export class CellGroup {
         this.cells.forEach(this.solver3, this);
         this.values.forEach(this.solver4, this);
         this.solver5();
+        this.values.forEach(this.solver6, this);
+        this.cells.forEach(this.solver7_row_values, this);
+        this.cells.forEach(this.solver7_col_values, this);
+        
         
         // Value exists in one cell only
 
@@ -101,6 +105,103 @@ export class CellGroup {
             }
         }
     }
+    // ========================================================================
+    // Solver applies to line groups only:
+    // Solver needs another solver for cleaning those values from same block
+    // If a value exists on this cellgroup inside one block only
+    // i.e. in cells 0,1,2 or in cells 3,4,5 or in cells 6,7,8
+    // value can be cleaned out from other lines of a block group
+    // ========================================================================
+    solver6 (value : number, index : number, arr : number[]) {
+        if ( ! this.isBlockGroup() ){
+            let cells_tmp = this.whatCellsHavePval(value);
+            if (cells_tmp.length > 0 && cells_tmp.length < 4 ) {
+                if (this.allCellsInSameBlock(cells_tmp)) {
+                    if (this.isRowGroup()) {
+                        this.setRowValsForCells(cells_tmp, value);
+                    }
+                    if (this.isColGroup()) {
+                        this.setColValsForCells(cells_tmp, value);
+                    }
+                }
+            } 
+        }
+    }
+    // ========================================================================
+    // If row or col values can be found from cell, remove those pvals from other cols/rows
+    // Solver applies to block group only
+    solver7_row_values ( cell : Cell, index : number, arr : Cell[] ) {
+        if ( this.isBlockGroup() ){
+            var cellIndexes = [];
+            for (let value of cell.rowValues) {
+                this.removePvalFromOtherRowsOnCellGroup(value,cell.row);
+            }    
+        }   
+    }
+    // ========================================================================
+    // If row or col values can be found from cell, remove those pvals from other cols/rows
+    // Solver applies to block group only
+    solver7_col_values ( cell : Cell, index : number, arr : Cell[] ) {
+        if ( this.isBlockGroup() ){
+            var cellIndexes = [];
+            for (let value of cell.colValues) {
+                this.removePvalFromOtherColsOnCellGroup(value, cell.col);
+            }    
+        }   
+    }
+    //-------------------------------------------------------------------------------------------
+    removePvalFromOtherRowsOnCellGroup ( value : number, row : number ) {
+        for( let i in this.cells ) {
+            if (this.cells[i].row !== row) {
+                this.removePvalFromCell( i, value );
+            }
+        }
+    }
+    //-------------------------------------------------------------------------------------------
+    removePvalFromOtherColsOnCellGroup (value : number, col : number) {
+        for( let i in this.cells ) {
+            if (this.cells[i].col !== col) {
+                this.removePvalFromCell( i, value );
+            }
+        }
+    }
+    //-------------------------------------------------------------------------------------------
+    setRowValsForCells( cells : Cell[], value : number ) : void {
+        for (let cell of cells) {
+            // Insert value to array only once
+            if (cell.rowValues.indexOf(value) < 0){
+                cell.rowValues.push(value);
+            }
+        }
+    }
+    //-------------------------------------------------------------------------------------------
+    setColValsForCells( cells : Cell[], value : number ) : void {
+        for (let cell of cells) {
+            // Insert value to array only once
+            if (cell.colValues.indexOf(value) < 0){
+                cell.colValues.push(value);
+            }
+        }
+    }
+    //-------------------------------------------------------------------------------------------
+    allCellsInSameBlock(cells : Cell[]) : boolean {
+        let ret : boolean = true;
+        let bg = this.getBlockGroupOfCell(cells[0]);
+        for (let cell of cells) { // Value only in two cells
+            let bg2 = this.getBlockGroupOfCell(cell);
+            if (bg != bg2 ) {
+                ret = false;
+            }
+        }
+        return ret;
+    }
+    //-------------------------------------------------------------------------------------------
+    getBlockGroupOfCell( cell : Cell ) : number {
+        var tmp = [0,1,1,1,2,2,2,3,3,3];
+        var col = tmp[cell.col];
+        var row = tmp[cell.row];
+        return col+(row-1)*3;
+    }
     //-------------------------------------------------------------------------------------------
     checkIfCellsMatchAsPair(cells : Cell[], value1, possibleValues ) : number [] {
         // Check if both cells contain, some other value in the list
@@ -165,6 +266,18 @@ export class CellGroup {
                 this.removePvalFromCell( i, value );
             }
         }
+    }
+    //-------------------------------------------------------------------------------------------
+    isRowGroup ( ) {
+        return (this.cells[0].row === this.cells[8].row);        
+    }
+    //-------------------------------------------------------------------------------------------
+    isColGroup ( ) {
+        return this.cells[0].col === this.cells[8].col;        
+    }
+    //-------------------------------------------------------------------------------------------
+    isBlockGroup ( ) {
+        return (this.cells[0].col+2) === (this.cells[8].col);        
     }
     //-------------------------------------------------------------------------------------------
     //removePvalFromCell (cell : Cell, index : number, arr : Cell[]) {
