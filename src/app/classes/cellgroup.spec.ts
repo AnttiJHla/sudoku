@@ -28,7 +28,9 @@ describe('CellGroup', () => {
             expect(cg.cells[i].pvals).not.toContain(1);
         }
     });
-
+ 
+     
+    
     it(`should have solver2 working as expected`, () => {
         let cg1 = new CellGroup();
         // Initializing empty cells
@@ -121,6 +123,7 @@ describe('CellGroup', () => {
         expect(cg1.cells[7].pvals).toContain(6);
     });
 
+
     it(`solver6 should work as expected`, () => {
         // Two values in two cells improved
         let cg1 = new CellGroup();
@@ -155,9 +158,44 @@ describe('CellGroup', () => {
         
     });
 
+    it(`solver7 should work as expected`, () => {
+        let cg1 = new CellGroup();
+
+        let cell1 = new Cell(0,4,7);
+        let cell2 = new Cell(2,4,8);
+        let cell3 = new Cell(5,4,9);
+
+        let cell4 = new Cell(8,5,7);
+        let cell5 = new Cell(1,5,8);
+        let cell6 = new Cell(3,5,9);
+
+        let cell7 = new Cell(4,6,7);
+        let cell8 = new Cell(0,6,8);
+        let cell9 = new Cell(0,6,9);
+
+        cg1.cells.push(cell1);
+        cg1.cells.push(cell2);
+        cg1.cells.push(cell3);
+        cg1.cells.push(cell4);
+        cg1.cells.push(cell5);
+        cg1.cells.push(cell6);
+        cg1.cells.push(cell7);
+        cg1.cells.push(cell8);
+        cg1.cells.push(cell9);
+
+        cg1.cells[0].pvals = [7,6];
+        cg1.cells[7].pvals = [7,9];
+        cg1.cells[8].pvals = [9,6];
+
+        cg1.values.forEach(cg1.solver7, cg1);
+        
+        expect(cg1.cells[7].rowValues).toContain(9);
+        expect(cg1.cells[8].rowValues).toContain(9);
+    });
+
+    // Following is related to solver 6
     it(`should be able to remove pvals from other rows of a block group`, () => {
         let cg1 = new CellGroup();
-        let cells1 : Cell [] = [];
 
         let cell1 = new Cell(0,1,1);
         let cell2 = new Cell(0,1,2);
@@ -184,7 +222,7 @@ describe('CellGroup', () => {
         cell2.rowValues.push(1);
         cell3.rowValues.push(1);
 
-        cg1.cells.forEach(cg1.solver7_row_values, cg1);
+        cg1.cells.forEach(cg1.solver6_row_values, cg1);
         expect(cg1.cells[3].pvals).not.toContain(1);
         expect(cg1.cells[4].pvals).not.toContain(1);
         expect(cg1.cells[5].pvals).not.toContain(1);
@@ -196,7 +234,6 @@ describe('CellGroup', () => {
     });
     it(`should be able to remove pvals from other cols of a block group`, () => {
         let cg1 = new CellGroup();
-        let cells1 : Cell [] = [];
 
         let cell1 = new Cell(0,1,1);
         let cell2 = new Cell(0,1,2);
@@ -222,7 +259,7 @@ describe('CellGroup', () => {
 
         cell1.colValues.push(1);
 
-        cg1.cells.forEach(cg1.solver7_col_values, cg1);
+        cg1.cells.forEach(cg1.solver6_col_values, cg1);
         expect(cg1.cells[1].pvals).not.toContain(1);
         expect(cg1.cells[2].pvals).not.toContain(1);
         expect(cg1.cells[4].pvals).not.toContain(1);
@@ -231,6 +268,14 @@ describe('CellGroup', () => {
         expect(cg1.cells[8].pvals).not.toContain(1);
 
     });
+
+    it(`should have a test case for solver7_row_values`, () => {
+        // Two values in two cells improved
+
+        expect(true).toBe(false);       
+        
+    });
+    
 
     it(`should be able to check block group of cell`, () => {
         // Two values in two cells improved
