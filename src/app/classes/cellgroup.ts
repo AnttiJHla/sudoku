@@ -138,7 +138,7 @@ export class CellGroup {
             let cells_tmp = this.whatCellsHavePval(value);
             if (cells_tmp.length > 0 && cells_tmp.length < 4 ) {
                 if (cells_tmp.every(this.cellsOnSameBlock, this)) {
-                        if (this.isRowGroup()) {
+                    if (this.isRowGroup()) {
                         this.setRowValsForCells(cells_tmp, value);
                     }
                     if (this.isColGroup()) {
@@ -217,29 +217,41 @@ export class CellGroup {
     }
     //-------------------------------------------------------------------------------------------
     removePvalFromOtherBlocksOnCellGroup ( value : number, block : number ) {
-        for( let i in this.cells ) {
-            let cell = this.cells[i];
-            let block2 = this.getBlockGroupOfCell(cell);
-            if ( block2 !== block ) {
-                this.removePvalFromCell( i , value );
-            }
+        let cells = this.cells.filter(this.cellBlockIsNot(block),this);
+
+        for( let cell of cells ) {
+            this.removePvalFromCell( cell, value );
         }
     }
     //-------------------------------------------------------------------------------------------
     removePvalFromOtherRowsOnCellGroup ( value : number, row : number ) {
-        for( let i in this.cells ) {
-            if (this.cells[i].row !== row) {
-                this.removePvalFromCell( i, value );
-            }
+        let cells = this.cells.filter(this.cellRowIsNot(row));
+
+        for( let cell of cells ) {
+            this.removePvalFromCell( cell, value );
         }
     }
     //-------------------------------------------------------------------------------------------
     removePvalFromOtherColsOnCellGroup (value : number, col : number) {
-        for( let i in this.cells ) {
-            if (this.cells[i].col !== col) {
-                this.removePvalFromCell( i, value );
-            }
+        let cells = this.cells.filter(this.cellColIsNot(col));
+        for( let cell of cells ) {
+            this.removePvalFromCell( cell, value );
         }
+    }
+    //-------------------------------------------------------------------------------------------
+    cellRowIsNot( x : number ) : any {
+        return function (cell) { return (cell.row !== x); }
+    }
+    //-------------------------------------------------------------------------------------------
+    cellColIsNot( x : number ) : any {
+        return function (cell) { return (cell.col !== x); }
+    }
+    //-------------------------------------------------------------------------------------------
+    cellBlockIsNot( x : number ) : any {
+        return function (cell) {
+             let block = this.getBlockGroupOfCell(cell);
+             return (block !== x); 
+            }
     }
     //-------------------------------------------------------------------------------------------
     setRowValsForCells( cells : Cell[], value : number ) : void {
@@ -260,34 +272,6 @@ export class CellGroup {
         }
     }
 
-    // Conditionally run a function for cell
-    // let cell of cells
-    // row != cell.row, col != cell.col, 
-
-    //-------------------------------------------------------------------------------------------
-    cellsOnSameBlock(el, index, arr) {
-        if (index === 0) return true;
-        let block1 = this.getBlockGroupOfCell(el);
-        let block2 = this.getBlockGroupOfCell(arr[index-1]);
-        return ( block1 === block2 );
-    }
-    //-------------------------------------------------------------------------------------------
-    cellsOnSameRow(el, index, arr) {
-        if (index === 0) return true;
-        return (el.row === arr[index - 1].row);
-    }
-    //-------------------------------------------------------------------------------------------
-    cellsOnSameCol(el, index, arr) {
-        if (index === 0) return true;
-        return (el.col === arr[index - 1].col);
-    }
-    //-------------------------------------------------------------------------------------------
-    getBlockGroupOfCell( cell : Cell ) : number {
-        var tmp = [0,1,1,1,2,2,2,3,3,3];
-        var col = tmp[cell.col];
-        var row = tmp[cell.row];
-        return col+(row-1)*3;
-    }
     //-------------------------------------------------------------------------------------------
     checkIfCellsMatchAsPair(cells : Cell[], value1, possibleValues ) : number [] {
         // Check if both cells contain, some other value in the list
@@ -337,34 +321,59 @@ export class CellGroup {
         return ret;
     }
     //-------------------------------------------------------------------------------------------
-    isRowGroup ( ) {
+    isRowGroup ( ) : boolean {
         return (this.cells[0].row === this.cells[8].row);        
     }
     //-------------------------------------------------------------------------------------------
-    isColGroup ( ) {
+    isColGroup ( ) : boolean {
         return this.cells[0].col === this.cells[8].col;        
     }
     //-------------------------------------------------------------------------------------------
-    isBlockGroup ( ) {
+    isBlockGroup ( ) : boolean {
         return (this.cells[0].col+2) === (this.cells[8].col);        
+    }
+    //-------------------------------------------------------------------------------------------
+    // Callback returning boolean value
+    //-------------------------------------------------------------------------------------------
+    cellsOnSameBlock(el, index, arr) : boolean {
+        if (index === 0) return true;
+        let block1 = this.getBlockGroupOfCell(el);
+        let block2 = this.getBlockGroupOfCell(arr[index-1]);
+        return ( block1 === block2 );
+    }
+    //-------------------------------------------------------------------------------------------
+    cellsOnSameRow(el, index, arr) : boolean  {
+        if (index === 0) return true;
+        return (el.row === arr[index - 1].row);
+    }
+    //-------------------------------------------------------------------------------------------
+    cellsOnSameCol(el, index, arr) : boolean  {
+        if (index === 0) return true;
+        return (el.col === arr[index - 1].col);
+    }
+    //-------------------------------------------------------------------------------------------
+    getBlockGroupOfCell( cell : Cell ) : number {
+        var tmp = [0,1,1,1,2,2,2,3,3,3];
+        var col = tmp[cell.col];
+        var row = tmp[cell.row];
+        return col+(row-1)*3;
     }
     //-------------------------------------------------------------------------------------------
     removePvalsFromOtherCells ( cellIndexes : number [], values : number [] ) {
         for( let i = 0; i < 9; i++ ) {
             if (cellIndexes.indexOf(+i) < 0) {
                 for (var value of values){
-                    this.removePvalFromCell(i,value);                    
+                    this.removePvalFromCell(this.cells[i],value);                    
                 }
             }
         } 
     }
     //-------------------------------------------------------------------------------------------
-    removePvalFromCell( index, value ) {
-        var x = this.cells[index].pvals.indexOf(value);
+    removePvalFromCell( cell : Cell, value : number ) {
+        var x = cell.pvals.indexOf(value);
         if (x > -1) {
-            this.cells[index].pvals.splice(x,1);
+            cell.pvals.splice(x,1);
         }
-        // Creates a new array of existing array for change detection
-        this.cells[index].pvals = [].concat(this.cells[index].pvals);
+        cell.pvals = [].concat(cell.pvals);
     }   
 }
