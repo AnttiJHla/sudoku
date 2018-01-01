@@ -302,7 +302,8 @@ describe('CellGroup', () => {
         cells1.push(cell1);
         cells1.push(cell2);
 
-        expect(cg1.allCellsInSameBlock(cells1)).toBe(true);       
+        //expect(cg1.allCellsInSameBlock(cells1)).toBe(true);       
+        expect(cells1.every(cg1.cellsOnSameBlock,cg1)).toBe(true);       
     });
 
     it(`should be able to check if cells are in different block`, () => {
@@ -317,7 +318,8 @@ describe('CellGroup', () => {
         cells2.push(cell1);
         cells2.push(cell3);
 
-        expect(cg1.allCellsInSameBlock(cells2)).toBe(false);       
+        //expect(cg1.allCellsInSameBlock(cells2)).toBe(false);       
+        expect(cells2.every(cg1.cellsOnSameBlock,cg1)).toBe(false);       
         
     });
 

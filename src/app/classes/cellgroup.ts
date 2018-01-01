@@ -137,8 +137,8 @@ export class CellGroup {
         if ( ! this.isBlockGroup() ){
             let cells_tmp = this.whatCellsHavePval(value);
             if (cells_tmp.length > 0 && cells_tmp.length < 4 ) {
-                if (this.allCellsInSameBlock(cells_tmp)) {
-                    if (this.isRowGroup()) {
+                if (cells_tmp.every(this.cellsOnSameBlock, this)) {
+                        if (this.isRowGroup()) {
                         this.setRowValsForCells(cells_tmp, value);
                     }
                     if (this.isColGroup()) {
@@ -162,11 +162,11 @@ export class CellGroup {
             if (cells_tmp.length > 0 && cells_tmp.length < 4 ) {
                 console.log("Cells_tmp : " + cells_tmp.toString());
                 
-                if (this.allCellsOnSameRow(cells_tmp)) {
+                if (cells_tmp.every(this.cellsOnSameRow)){
                     console.log("Found values on same row : " + value);
                     this.setRowValsForCells(cells_tmp, value);
                 }
-                if (this.allCellsOnSameCol(cells_tmp)) {
+                if (cells_tmp.every(this.cellsOnSameCol)){
                     console.log("Found values on same col : " + value);
                     this.setColValsForCells(cells_tmp, value);
                 }
@@ -195,16 +195,6 @@ export class CellGroup {
             }    
         }   
     }
-    //-------------------------------------------------------------------------------------------
-    removePvalFromOtherBlocksOnCellGroup ( value : number, block : number ) {
-        for( let i in this.cells ) {
-            let cell = this.cells[i];
-            let block2 = this.getBlockGroupOfCell(cell);
-            if ( block2 !== block ) {
-                this.removePvalFromCell( i , value );
-            }
-        }
-    }
     // ========================================================================
     // If row or col values can be found from cell, remove those pvals from other cols/rows
     // Solver applies to block group only
@@ -224,6 +214,16 @@ export class CellGroup {
                 this.removePvalFromOtherColsOnCellGroup(value, cell.col);
             }    
         }   
+    }
+    //-------------------------------------------------------------------------------------------
+    removePvalFromOtherBlocksOnCellGroup ( value : number, block : number ) {
+        for( let i in this.cells ) {
+            let cell = this.cells[i];
+            let block2 = this.getBlockGroupOfCell(cell);
+            if ( block2 !== block ) {
+                this.removePvalFromCell( i , value );
+            }
+        }
     }
     //-------------------------------------------------------------------------------------------
     removePvalFromOtherRowsOnCellGroup ( value : number, row : number ) {
@@ -259,39 +259,27 @@ export class CellGroup {
             }
         }
     }
+
+    // Conditionally run a function for cell
+    // let cell of cells
+    // row != cell.row, col != cell.col, 
+
     //-------------------------------------------------------------------------------------------
-    allCellsInSameBlock(cells : Cell[]) : boolean {
-        let ret : boolean = true;
-        let bg = this.getBlockGroupOfCell(cells[0]);
-        for (let cell of cells) { // Value only in two cells
-            let bg2 = this.getBlockGroupOfCell(cell);
-            if (bg != bg2 ) {
-                ret = false;
-            }
-        }
-        return ret;
+    cellsOnSameBlock(el, index, arr) {
+        if (index === 0) return true;
+        let block1 = this.getBlockGroupOfCell(el);
+        let block2 = this.getBlockGroupOfCell(arr[index-1]);
+        return ( block1 === block2 );
     }
     //-------------------------------------------------------------------------------------------
-    allCellsOnSameRow(cells : Cell[]) : boolean {
-        let ret : boolean = true;
-        let row = cells[0].row;
-        for (let cell of cells) { // Value only in two cells
-            if ( row !== cell.row ) {
-                ret = false;
-            }
-        }
-        return ret;
+    cellsOnSameRow(el, index, arr) {
+        if (index === 0) return true;
+        return (el.row === arr[index - 1].row);
     }
     //-------------------------------------------------------------------------------------------
-    allCellsOnSameCol(cells : Cell[]) : boolean {
-        let ret : boolean = true;
-        let col = cells[0].col;
-        for (let cell of cells) { // Value only in two cells
-            if ( col !== cell.col ) {
-                ret = false;
-            }
-        }
-        return ret;
+    cellsOnSameCol(el, index, arr) {
+        if (index === 0) return true;
+        return (el.col === arr[index - 1].col);
     }
     //-------------------------------------------------------------------------------------------
     getBlockGroupOfCell( cell : Cell ) : number {
