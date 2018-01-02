@@ -23,7 +23,7 @@ describe('CellGroup', () => {
     other cells should not have that value in pvals`, () => {
         let cell1 = new Cell(1,0,0);        
         cg.cells[0]=cell1;
-        cg.cells.forEach(cg.solver1, cg);
+        cg.cells.forEach(cg.solver123, cg);
         for (let i = 1; i < 9; i ++){
             expect(cg.cells[i].pvals).not.toContain(1);
         }
@@ -41,7 +41,7 @@ describe('CellGroup', () => {
         
         cg1.cells[0].pvals = [1,7];
         cg1.cells[1].pvals = [1,7];
-        cg1.cells.forEach(cg1.solver2, cg1);
+        cg1.cells.forEach(cg1.solver123, cg1);
         for (let i = 2; i < 9; i ++){
             expect(cg1.cells[i].pvals).not.toContain(1);
             expect(cg1.cells[i].pvals).not.toContain(7);
@@ -60,7 +60,7 @@ describe('CellGroup', () => {
         cg1.cells[1].pvals = [1,2,7];
         cg1.cells[2].pvals = [1,2,7];
         //cg1.solver3();
-        cg1.cells.forEach(cg1.solver3, cg1);
+        cg1.cells.forEach(cg1.solver123, cg1);
         for (let i = 3; i < 9; i ++){
             expect(cg1.cells[i].pvals).not.toContain(1);
             expect(cg1.cells[i].pvals).not.toContain(2);

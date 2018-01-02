@@ -29,40 +29,6 @@ export class CellGroup {
 
     }
     // ========================================================================
-    // If cell in cell group has only one possible value in any cell, other cells in cellgroup
-    // should clear it out
-    solver1 ( cell : Cell, index : number, arr : Cell[] ) {
-        if ( cell.pvals.length === 1 ) {
-            cell.value = +cell.pvals.toString();
-            this.removePvalsFromOtherCells([index], [cell.value]);
-        }
-    }
-    // ========================================================================
-    // If 2 values are present in two cells only, those values should be cleared 
-    // from other cells
-    // Is there a 2nd case for this solver also..?
-    solver2 ( cell : Cell, index : number, arr : Cell[] ) {
-        var cellIndexes=[];
-        if ( cell.pvals.length === 2 ) {
-            cellIndexes = this.whatCellsHaveSamePvals(cell.pvals);
-            if ( cellIndexes.length === 2 ) {
-                this.removePvalsFromOtherCells(cellIndexes, cell.pvals);
-            }
-        }
-    }
-    // ========================================================================
-    // If 3 values are present in three cells only, those values should be cleared 
-    // from other cells
-    solver3 ( cell : Cell, index : number, arr : Cell[] ) {
-        var cellIndexes = [];
-        if ( cell.pvals.length === 3 ) {
-            cellIndexes = this.whatCellsHaveSamePvals( cell.pvals );
-            if (cellIndexes.length === 3) {
-                this.removePvalsFromOtherCells(cellIndexes, cell.pvals);
-            }
-        }
-    }
-    // ========================================================================
     // If 3 values are present in three cells only, those values should be cleared 
     // from other cells
     solver123 ( cell : Cell, index : number, arr : Cell[] ) {
