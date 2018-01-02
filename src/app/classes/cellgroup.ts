@@ -179,8 +179,7 @@ export class CellGroup {
     solver7_row_values ( cell : Cell, index : number, arr : Cell[] ) {
         if ( this.isRowGroup() ){
             for (let value of cell.rowValues) {
-                let block = this.getBlockGroupOfCell(cell);
-                this.removePvalFromOtherBlocksOnCellGroup(value, block);
+                this.removePvalFromOtherBlocksOnCellGroup(value, cell.block);
             }    
         }   
     }
@@ -190,8 +189,7 @@ export class CellGroup {
     solver7_col_values ( cell : Cell, index : number, arr : Cell[] ) {
         if ( this.isColGroup() ){
             for (let value of cell.colValues) {
-                let block = this.getBlockGroupOfCell(cell);
-                this.removePvalFromOtherBlocksOnCellGroup(value, block);
+                this.removePvalFromOtherBlocksOnCellGroup(value, cell.block);
             }    
         }   
     }
@@ -218,25 +216,30 @@ export class CellGroup {
     //-------------------------------------------------------------------------------------------
     removePvalFromOtherBlocksOnCellGroup ( value : number, block : number ) {
         let cells = this.cells.filter(this.cellBlockIsNot(block),this);
-
-        for( let cell of cells ) {
-            this.removePvalFromCell( cell, value );
-        }
+        this.removePvalFromCells( cells, value );
     }
     //-------------------------------------------------------------------------------------------
     removePvalFromOtherRowsOnCellGroup ( value : number, row : number ) {
         let cells = this.cells.filter(this.cellRowIsNot(row));
-
-        for( let cell of cells ) {
-            this.removePvalFromCell( cell, value );
-        }
+        this.removePvalFromCells( cells, value );
     }
     //-------------------------------------------------------------------------------------------
     removePvalFromOtherColsOnCellGroup (value : number, col : number) {
         let cells = this.cells.filter(this.cellColIsNot(col));
-        for( let cell of cells ) {
-            this.removePvalFromCell( cell, value );
+        this.removePvalFromCells( cells, value );
+    }
+    //-------------------------------------------------------------------------------------------
+    cellTargetIsNot ( target : string,  x : number ) : any {
+        let ret = null;
+        switch (target){
+            case "row": ret = function (cell) { return (cell.row !== x); };
+            break;
+            case "col": ret = function (cell) { return (cell.col !== x); };
+            break;
+            case "block": ret = function (cell) { return (cell.block !== x); };
+            break;
         }
+        return ret;
     }
     //-------------------------------------------------------------------------------------------
     cellRowIsNot( x : number ) : any {
@@ -249,8 +252,7 @@ export class CellGroup {
     //-------------------------------------------------------------------------------------------
     cellBlockIsNot( x : number ) : any {
         return function (cell) {
-             let block = this.getBlockGroupOfCell(cell);
-             return (block !== x); 
+             return (cell.block !== x); 
             }
     }
     //-------------------------------------------------------------------------------------------
@@ -335,11 +337,9 @@ export class CellGroup {
     //-------------------------------------------------------------------------------------------
     // Callback returning boolean value
     //-------------------------------------------------------------------------------------------
-    cellsOnSameBlock(el, index, arr) : boolean {
+    cellsOnSameBlock(el : Cell, index, arr) : boolean {
         if (index === 0) return true;
-        let block1 = this.getBlockGroupOfCell(el);
-        let block2 = this.getBlockGroupOfCell(arr[index-1]);
-        return ( block1 === block2 );
+        return ( el.block === arr[index-1].block );
     }
     //-------------------------------------------------------------------------------------------
     cellsOnSameRow(el, index, arr) : boolean  {
@@ -352,13 +352,6 @@ export class CellGroup {
         return (el.col === arr[index - 1].col);
     }
     //-------------------------------------------------------------------------------------------
-    getBlockGroupOfCell( cell : Cell ) : number {
-        var tmp = [0,1,1,1,2,2,2,3,3,3];
-        var col = tmp[cell.col];
-        var row = tmp[cell.row];
-        return col+(row-1)*3;
-    }
-    //-------------------------------------------------------------------------------------------
     removePvalsFromOtherCells ( cellIndexes : number [], values : number [] ) {
         for( let i = 0; i < 9; i++ ) {
             if (cellIndexes.indexOf(+i) < 0) {
@@ -368,6 +361,12 @@ export class CellGroup {
             }
         } 
     }
+    //-------------------------------------------------------------------------------------------
+    removePvalFromCells( cells : Cell[], value : number ) {
+        for( let cell of cells ) {
+            this.removePvalFromCell( cell, value );
+        }
+    }   
     //-------------------------------------------------------------------------------------------
     removePvalFromCell( cell : Cell, value : number ) {
         var x = cell.pvals.indexOf(value);

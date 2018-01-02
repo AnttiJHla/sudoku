@@ -285,9 +285,9 @@ describe('CellGroup', () => {
         let cell2 = new Cell(0,1,2);
         let cell3 = new Cell(0,9,9);
 
-        expect(cg1.getBlockGroupOfCell(cell1)).toBe(1);       
-        expect(cg1.getBlockGroupOfCell(cell2)).toBe(1);       
-        expect(cg1.getBlockGroupOfCell(cell3)).toBe(9);       
+        expect(cell1.block).toBe(1);       
+        expect(cell2.block).toBe(1);       
+        expect(cell3.block).toBe(9);       
     });
 
     it(`should be able to check if cells are in same block`, () => {
