@@ -23,14 +23,9 @@ export class CellGroup {
         this.solver5();
 
         this.values.forEach(this.solver6, this);
-        this.cells.forEach(this.solver6_row_values, this);
-        this.cells.forEach(this.solver6_col_values, this);
-        
         this.values.forEach(this.solver7, this);
-        this.cells.forEach(this.solver7_row_values, this);
-        this.cells.forEach(this.solver7_col_values, this);
-        
-        // Value exists in one cell only
+
+        this.cells.forEach(this.solver67_values, this);
 
     }
     // ========================================================================
@@ -91,6 +86,7 @@ export class CellGroup {
         if (cells_tmp.length === 1 ) {
             if (cells_tmp[0].pvals.length > 1) {
                 cells_tmp[0].pvals = [value];                    
+                cells_tmp[0].value = +cells_tmp[0].pvals.toString();
             }
         }
     }
@@ -176,84 +172,36 @@ export class CellGroup {
     // ========================================================================
     // If row values can be found from cell, remove those pvals from other 
     // cells of the line group
-    solver7_row_values ( cell : Cell, index : number, arr : Cell[] ) {
+    solver67_values ( cell : Cell, index : number, arr : Cell[] ) {
         if ( this.isRowGroup() ){
-            for (let value of cell.rowValues) {
-                this.removePvalFromOtherBlocksOnCellGroup(value, cell.block);
+            for ( let value of cell.rowValues ) {
+                this.removePvalFromOtherTargetsOnCellGroup('block', value, cell.block);
             }    
         }   
-    }
-    // ========================================================================
-    // If col values can be found from cell, remove those pvals from other 
-    // cells of the line group
-    solver7_col_values ( cell : Cell, index : number, arr : Cell[] ) {
         if ( this.isColGroup() ){
-            for (let value of cell.colValues) {
-                this.removePvalFromOtherBlocksOnCellGroup(value, cell.block);
+            for ( let value of cell.colValues ) {
+                this.removePvalFromOtherTargetsOnCellGroup('block', value, cell.block);
             }    
         }   
-    }
-    // ========================================================================
-    // If row or col values can be found from cell, remove those pvals from other cols/rows
-    // Solver applies to block group only
-    solver6_row_values ( cell : Cell, index : number, arr : Cell[] ) {
         if ( this.isBlockGroup() ){
-            for (let value of cell.rowValues) {
-                this.removePvalFromOtherRowsOnCellGroup(value,cell.row);
+            for ( let value of cell.rowValues ) {
+                this.removePvalFromOtherTargetsOnCellGroup('row', value, cell.row);
             }    
-        }   
-    }
-    // ========================================================================
-    // If row or col values can be found from cell, remove those pvals from other cols/rows
-    // Solver applies to block group only
-    solver6_col_values ( cell : Cell, index : number, arr : Cell[] ) {
-        if ( this.isBlockGroup() ){
-            for (let value of cell.colValues) {
-                this.removePvalFromOtherColsOnCellGroup(value, cell.col);
+            for ( let value of cell.colValues ) {
+                this.removePvalFromOtherTargetsOnCellGroup('col', value, cell.col);
             }    
         }   
     }
     //-------------------------------------------------------------------------------------------
-    removePvalFromOtherBlocksOnCellGroup ( value : number, block : number ) {
-        let cells = this.cells.filter(this.cellBlockIsNot(block),this);
-        this.removePvalFromCells( cells, value );
+    // Where target = row, col, block
+    removePvalFromOtherTargetsOnCellGroup ( param : string, pval : number, index : number ) {
+        let cells = this.cells.filter(this.cellParamValueIsNot(param, index));
+        this.removePvalFromCells( cells, pval );
     }
     //-------------------------------------------------------------------------------------------
-    removePvalFromOtherRowsOnCellGroup ( value : number, row : number ) {
-        let cells = this.cells.filter(this.cellRowIsNot(row));
-        this.removePvalFromCells( cells, value );
-    }
-    //-------------------------------------------------------------------------------------------
-    removePvalFromOtherColsOnCellGroup (value : number, col : number) {
-        let cells = this.cells.filter(this.cellColIsNot(col));
-        this.removePvalFromCells( cells, value );
-    }
-    //-------------------------------------------------------------------------------------------
-    cellTargetIsNot ( target : string,  x : number ) : any {
-        let ret = null;
-        switch (target){
-            case "row": ret = function (cell) { return (cell.row !== x); };
-            break;
-            case "col": ret = function (cell) { return (cell.col !== x); };
-            break;
-            case "block": ret = function (cell) { return (cell.block !== x); };
-            break;
-        }
-        return ret;
-    }
-    //-------------------------------------------------------------------------------------------
-    cellRowIsNot( x : number ) : any {
-        return function (cell) { return (cell.row !== x); }
-    }
-    //-------------------------------------------------------------------------------------------
-    cellColIsNot( x : number ) : any {
-        return function (cell) { return (cell.col !== x); }
-    }
-    //-------------------------------------------------------------------------------------------
-    cellBlockIsNot( x : number ) : any {
-        return function (cell) {
-             return (cell.block !== x); 
-            }
+    // Cell row/col/block is not y
+    cellParamValueIsNot ( item : string,  value : number ) : any {
+        return function (cell : Cell) { return (cell.getParam(item) !== value); };
     }
     //-------------------------------------------------------------------------------------------
     setRowValsForCells( cells : Cell[], value : number ) : void {
@@ -296,14 +244,16 @@ export class CellGroup {
     //-------------------------------------------------------------------------------------------
     whatValuesExistInTwoCellsOnly() : number []{
         var ret : number [] = []
-        for( let value = 1; value <= 9; value++ ) {
-            let x = this.whatCellsHavePval(value);
+        for( let value of this.values ) {
+                let x = this.whatCellsHavePval(+value);
             if(x.length === 2){
-                ret.push(value);
+                ret.push(+value);
             }
         }
         return ret;
     }
+    //-------------------------------------------------------------------------------------------
+    // Hyvä esimerkki callbackista?
     //-------------------------------------------------------------------------------------------
     whatCellsHavePval( value ) : Cell []{
         return this.cells.filter( function(cell, index) {            
@@ -315,9 +265,9 @@ export class CellGroup {
     // Note: returns indexes of cells, not cells
     whatCellsHaveSamePvals( pvals : number[] ) : number[] {
         var ret = [];
-        for( let i = 0; i < 9; i++ ) {
+        for( let i in this.cells ) {
             if (this.cells[i].pvals.toString() === pvals.toString()) {
-                ret.push(i);
+                ret.push(+i);
             }
         }            
         return ret;
@@ -353,10 +303,10 @@ export class CellGroup {
     }
     //-------------------------------------------------------------------------------------------
     removePvalsFromOtherCells ( cellIndexes : number [], values : number [] ) {
-        for( let i = 0; i < 9; i++ ) {
+        for( let i in this.cells ) {
             if (cellIndexes.indexOf(+i) < 0) {
                 for (var value of values){
-                    this.removePvalFromCell(this.cells[i],value);                    
+                    this.removePvalFromCell(this.cells[+i],value);                    
                 }
             }
         } 

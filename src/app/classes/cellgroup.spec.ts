@@ -222,7 +222,8 @@ describe('CellGroup', () => {
         cell2.rowValues.push(1);
         cell3.rowValues.push(1);
 
-        cg1.cells.forEach(cg1.solver6_row_values, cg1);
+        //cg1.cells.forEach(cg1.solver6_row_values, cg1);
+        cg1.cells.forEach(cg1.solver67_values, cg1);
         expect(cg1.cells[3].pvals).not.toContain(1);
         expect(cg1.cells[4].pvals).not.toContain(1);
         expect(cg1.cells[5].pvals).not.toContain(1);
@@ -259,7 +260,8 @@ describe('CellGroup', () => {
 
         cell1.colValues.push(1);
 
-        cg1.cells.forEach(cg1.solver6_col_values, cg1);
+        cg1.cells.forEach(cg1.solver67_values, cg1);
+        //cg1.cells.forEach(cg1.solver6_col_values, cg1);
         expect(cg1.cells[1].pvals).not.toContain(1);
         expect(cg1.cells[2].pvals).not.toContain(1);
         expect(cg1.cells[4].pvals).not.toContain(1);
