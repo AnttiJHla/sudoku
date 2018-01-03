@@ -8,28 +8,17 @@ export class CellGroup {
     // Dummy array to be used to replace for loops...
     values = [1,2,3,4,5,6,7,8,9];
     
-    constructor(
-    ) {
-     }    
+    constructor()
+    {
+    }    
 
      solve () {
-        // this.cells.forEach(this.solver1, this);
-        // this.cells.forEach(this.solver2, this);
-        //this.cells.forEach(this.solver3, this);
-
         this.cells.forEach(this.solver123, this);
-
         this.values.forEach(this.solver4, this);
         this.solver5();
-
-        this.values.forEach(this.solver6, this);
-        this.values.forEach(this.solver7, this);
-
-        this.cells.forEach(this.solver67_values, this);
-
     }
     // ========================================================================
-    // If 3 values are present in three cells only, those values should be cleared 
+    // If N values are present in N cells only, those values should be cleared 
     // from other cells
     solver123 ( cell : Cell, index : number, arr : Cell[] ) {
         var cellIndexes = [];
@@ -88,76 +77,6 @@ export class CellGroup {
             }
         }
     }
-    // ========================================================================
-    // Solver applies to line groups only:
-    // Solver needs another solver for cleaning those values from same block
-    // If a value exists on this cellgroup inside one block only
-    // i.e. in cells 0,1,2 or in cells 3,4,5 or in cells 6,7,8
-    // value can be cleaned out from other lines of a block group
-    // ========================================================================
-    solver6 (value : number, index : number, arr : number[]) {
-        if ( ! this.isBlockGroup() ){
-            let cells_tmp = this.whatCellsHavePval(value);
-            if (cells_tmp.length > 0 && cells_tmp.length < 4 ) {
-                if (cells_tmp.every(this.cellsOnSameBlock, this)) {
-                    if (this.isRowGroup()) {
-                        this.setRowValsForCells(cells_tmp, value);
-                    }
-                    if (this.isColGroup()) {
-                        this.setColValsForCells(cells_tmp, value);
-                    }
-                }
-            } 
-        }
-    }
-    // ========================================================================
-    // Solver applies to block groups only:
-    // Solver needs another solver for cleaning those values from same line group
-    // If a value exists on this cellgroup inside one row or col only
-    // i.e. in cells 0,1,2 or in cells 3,4,5 or in cells 6,7,8
-    // value can be cleaned out from other cells of line group
-    // ========================================================================
-    solver7 (value : number, index : number, arr : number[]) {
-        if ( this.isBlockGroup() ){
-            console.log("Solver 8 finds a block group");
-            let cells_tmp = this.whatCellsHavePval(value);
-            if (cells_tmp.length > 0 && cells_tmp.length < 4 ) {
-                console.log("Cells_tmp : " + cells_tmp.toString());
-                
-                if (cells_tmp.every(this.cellsOnSameRow)){
-                    console.log("Found values on same row : " + value);
-                    this.setRowValsForCells(cells_tmp, value);
-                }
-                if (cells_tmp.every(this.cellsOnSameCol)){
-                    console.log("Found values on same col : " + value);
-                    this.setColValsForCells(cells_tmp, value);
-                }
-            } 
-        }
-    }
-    // ========================================================================
-    // If row values can be found from cell, remove those pvals from other 
-    // cells of the line group
-    solver67_values ( cell : Cell, index : number, arr : Cell[] ) {
-        if ( this.isRowGroup() ){
-            for ( let value of cell.rowValues ) {
-                this.removePvalFromOtherTargetsOnCellGroup('block', value, cell.block);
-            }    
-        }   
-        if ( this.isColGroup() ){
-            for ( let value of cell.colValues ) {
-                this.removePvalFromOtherTargetsOnCellGroup('block', value, cell.block);
-            }    
-        }   
-        if ( this.isBlockGroup() ){
-            for ( let value of cell.rowValues ) {
-                this.removePvalFromOtherTargetsOnCellGroup('row', value, cell.row);
-            }    
-            for ( let value of cell.colValues ) {
-                this.removePvalFromOtherTargetsOnCellGroup('col', value, cell.col);
-            }    
-        }   
-    }
     //-------------------------------------------------------------------------------------------
     // Where target = row, col, block
     removePvalFromOtherTargetsOnCellGroup ( param : string, pval : number, index : number ) {
@@ -168,24 +87,6 @@ export class CellGroup {
     // Cell row/col/block is not y
     cellParamValueIsNot ( item : string,  value : number ) : any {
         return function (cell : Cell) { return (cell.getParam(item) !== value); };
-    }
-    //-------------------------------------------------------------------------------------------
-    setRowValsForCells( cells : Cell[], value : number ) : void {
-        for (let cell of cells) {
-            // Insert value to array only once
-            if (cell.rowValues.indexOf(value) < 0){
-                cell.rowValues.push(value);
-            }
-        }
-    }
-    //-------------------------------------------------------------------------------------------
-    setColValsForCells( cells : Cell[], value : number ) : void {
-        for (let cell of cells) {
-            // Insert value to array only once
-            if (cell.colValues.indexOf(value) < 0){
-                cell.colValues.push(value);
-            }
-        }
     }
 
     //-------------------------------------------------------------------------------------------
@@ -239,33 +140,11 @@ export class CellGroup {
         return ret;
     }
     //-------------------------------------------------------------------------------------------
-    isRowGroup ( ) : boolean {
-        return (this.cells[0].row === this.cells[8].row);        
-    }
-    //-------------------------------------------------------------------------------------------
-    isColGroup ( ) : boolean {
-        return this.cells[0].col === this.cells[8].col;        
-    }
-    //-------------------------------------------------------------------------------------------
-    isBlockGroup ( ) : boolean {
-        return (this.cells[0].col+2) === (this.cells[8].col);        
-    }
-    //-------------------------------------------------------------------------------------------
     // Callback returning boolean value
     //-------------------------------------------------------------------------------------------
     cellsOnSameBlock(el : Cell, index, arr) : boolean {
         if (index === 0) return true;
         return ( el.block === arr[index-1].block );
-    }
-    //-------------------------------------------------------------------------------------------
-    cellsOnSameRow(el, index, arr) : boolean  {
-        if (index === 0) return true;
-        return (el.row === arr[index - 1].row);
-    }
-    //-------------------------------------------------------------------------------------------
-    cellsOnSameCol(el, index, arr) : boolean  {
-        if (index === 0) return true;
-        return (el.col === arr[index - 1].col);
     }
     //-------------------------------------------------------------------------------------------
     removePvalsFromOtherCells ( cellIndexes : number [], values : number [] ) {
@@ -291,4 +170,23 @@ export class CellGroup {
         }
         cell.pvals = [].concat(cell.pvals);
     }   
+    //-------------------------------------------------------------------------------------------
+    setColValsForCells( cells : Cell[], value : number ) : void {
+        for (let cell of cells) {
+            // Insert value to array only once
+            if (cell.colValues.indexOf(value) < 0){
+                cell.colValues.push(value);
+            }
+        }
+    }    
+    //-------------------------------------------------------------------------------------------
+    setRowValsForCells( cells : Cell[], value : number ) : void {
+        for (let cell of cells) {
+            // Insert value to array only once
+            if (cell.rowValues.indexOf(value) < 0){
+                cell.rowValues.push(value);
+            }
+        }
+    }    
+    
 }

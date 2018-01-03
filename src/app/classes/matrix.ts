@@ -1,12 +1,14 @@
 import { Cell } from '../classes/cell';
-import { CellGroup } from '../classes/cellgroup';
+import { RowGroup } from '../classes/rowgroup';
+import { ColGroup } from '../classes/colgroup';
+import { BlockGroup } from '../classes/blockgroup';
 
 export class Matrix {
     
     cells : Cell[][];
-    rowGroups : CellGroup[] = [];
-    colGroups : CellGroup[] = [];
-    blockGroups : CellGroup[] = [];
+    rowGroups : RowGroup[] = [];
+    colGroups : ColGroup[] = [];
+    blockGroups : BlockGroup[] = [];
     
     constructor( values : number[] ) {
         this.initCellGroups();
@@ -18,17 +20,6 @@ export class Matrix {
                 this.addCellToCellGroups(this.cells[row][col]);
             }
         }        
-        /*
-        this.solve();
-        while (!this.matrixHasBeenSolved()) {
-            this.solve();            
-        }
-        this.solve();            
-        this.solve();            
-        this.solve();            
-        this.solve();            
-        this.solve();            
-        */
     }
 
     matrixHasBeenSolved(  ) : boolean {
@@ -46,9 +37,9 @@ export class Matrix {
 
       initCellGroups(  ) {
         for ( let i = 1; i <= 9; i++ ) {
-            this.rowGroups[i] = new CellGroup();
-            this.colGroups[i] = new CellGroup();
-            this.blockGroups[i] = new CellGroup();
+            this.rowGroups[i] = new RowGroup();
+            this.colGroups[i] = new ColGroup();
+            this.blockGroups[i] = new BlockGroup();
         }
       }
 
