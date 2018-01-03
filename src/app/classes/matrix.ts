@@ -44,18 +44,10 @@ export class Matrix {
       }
 
       addCellToCellGroups( cell : Cell ) {
-        var x = this.getBlockGroupOfCell(cell);
         console.log("Adding cell to cell groups");
         this.rowGroups[cell.row].cells.push(cell);
         this.colGroups[cell.col].cells.push(cell);
-        this.blockGroups[x].cells.push(cell);
-      }
-
-      getBlockGroupOfCell( cell : Cell ) : number {
-          var tmp = [0,1,1,1,2,2,2,3,3,3];
-          var col = tmp[cell.col];
-          var row = tmp[cell.row];
-          return col+(row-1)*3;
+        this.blockGroups[cell.block].cells.push(cell);
       }
 
       solve(){
@@ -67,11 +59,5 @@ export class Matrix {
         }
       }
 
-      writeLog(){
-          console.log("Writing log: " + 
-          this.cells[1][1].pvals.toString());
-          this.cells[1][1].pvals.push(10);
-          this.cells[1][1].pvals.pop();
-        }
       
 }
