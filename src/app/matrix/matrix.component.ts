@@ -150,9 +150,5 @@ export class MatrixComponent implements OnInit {
   }
 
 
-  writeLog () {
-    this.matrix.writeLog();
-    this.matrix.cells[1][1].pvals.splice(0,1);
-  }
 
 }

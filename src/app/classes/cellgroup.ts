@@ -33,16 +33,14 @@ export class CellGroup {
         }
     }
     // ========================================================================
-    // Pval exists in one cell only
+    // Pval exists in one cell only, cell may have other pvals also.
     solver4 (value : number, index : number, arr : number[]) {
         // if value can be found in one cell only and that cell has multiple
         // pvals, other pvals should be cleaned from it.
         let cells_tmp = this.whatCellsHavePval(value);
-        if (cells_tmp.length === 1 ) {
-            if (cells_tmp[0].pvals.length > 1) {
-                cells_tmp[0].pvals = [value];                    
-                cells_tmp[0].value = +cells_tmp[0].pvals.toString();
-            }
+        if (cells_tmp.length === 1 && cells_tmp[0].pvals.length > 1 ) {
+            cells_tmp[0].pvals = [ value ];                    
+            cells_tmp[0].value = +cells_tmp[0].pvals.toString();
         }
     }
     // ========================================================================
@@ -113,6 +111,7 @@ export class CellGroup {
         var ret : number [] = []
         for( let value of this.values ) {
                 let x = this.whatCellsHavePval(+value);
+
             if(x.length === 2){
                 ret.push(+value);
             }
@@ -125,6 +124,21 @@ export class CellGroup {
     whatCellsHavePval( value ) : Cell []{
         return this.cells.filter( function(cell, index) {            
                 return (cell.pvals.includes(value))
+            }
+        );    
+    }
+    //-------------------------------------------------------------------------------------------
+    NOT_USED_whatCellsHaveIdenticalPvals( pvals :  number [] ) : Cell []{
+        return this.cells.filter( function(cell, index) {            
+                return (cell.pvals.toString() === pvals.toString())
+            }
+        );    
+    }
+    //-------------------------------------------------------------------------------------------
+    whatCellsNotInList( list : number [] ) : Cell []{
+        return this.cells.filter( function(cell, index) {            
+            let tmp = list.indexOf(+index);
+                return (tmp < 0)
             }
         );    
     }
@@ -148,44 +162,42 @@ export class CellGroup {
     }
     //-------------------------------------------------------------------------------------------
     removePvalsFromOtherCells ( cellIndexes : number [], values : number [] ) {
-        for( let i in this.cells ) {
-            if (cellIndexes.indexOf(+i) < 0) {
-                for (var value of values){
-                    this.removePvalFromCell(this.cells[+i],value);                    
-                }
-            }
+        let cells = this.whatCellsNotInList(cellIndexes);
+        for( let cell of cells ) {
+            cell.removePvals(values);
         } 
     }
     //-------------------------------------------------------------------------------------------
     removePvalFromCells( cells : Cell[], value : number ) {
         for( let cell of cells ) {
-            this.removePvalFromCell( cell, value );
+            cell.removePval( value );
         }
     }   
+
     //-------------------------------------------------------------------------------------------
-    removePvalFromCell( cell : Cell, value : number ) {
-        var x = cell.pvals.indexOf(value);
-        if (x > -1) {
-            cell.pvals.splice(x,1);
-        }
-        cell.pvals = [].concat(cell.pvals);
-    }   
+    // Returns a callback adding col value to a cell
+    NOT_USED_addColValue ( value : number ) : any {
+        return function (cell : Cell) { 
+            return (cell.addColVal(value)); 
+        };
+    }
+    //-------------------------------------------------------------------------------------------
+    // Returns a callback adding row value to a cell
+    NOT_USED_addRowValue ( value : number ) : any {
+        return function (cell : Cell) { 
+            return (cell.addRowVal(value)); 
+        };
+    }
     //-------------------------------------------------------------------------------------------
     setColValsForCells( cells : Cell[], value : number ) : void {
         for (let cell of cells) {
-            // Insert value to array only once
-            if (cell.colValues.indexOf(value) < 0){
-                cell.colValues.push(value);
-            }
+            cell.addColVal(value);
         }
     }    
     //-------------------------------------------------------------------------------------------
     setRowValsForCells( cells : Cell[], value : number ) : void {
         for (let cell of cells) {
-            // Insert value to array only once
-            if (cell.rowValues.indexOf(value) < 0){
-                cell.rowValues.push(value);
-            }
+            cell.addRowVal(value);
         }
     }    
     

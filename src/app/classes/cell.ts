@@ -47,5 +47,33 @@ export class Cell {
         }
         return ret;
     }
+    //-------------------------------------------------------------------------------------------
+    removePvals ( values : number [] ) {
+        for (var value of values){
+            this.removePval(value);                    
+        }
+    }
+    
+    //-------------------------------------------------------------------------------------------
+    removePval( value : number ) {
+        var x = this.pvals.indexOf(value);
+        if (x > -1) {
+            this.pvals.splice(x,1);
+        }
+        this.pvals = [].concat(this.pvals);
+    }   
+    //-------------------------------------------------------------------------------------------
+    addRowVal(value : number ) : void {
+        if (this.rowValues.indexOf(value) < 0){
+            this.rowValues.push(value);
+        }
+    }    
+    //-------------------------------------------------------------------------------------------
+    addColVal(value : number ) : void {
+        if (this.colValues.indexOf(value) < 0){
+            this.colValues.push(value);
+        }
+    }    
+    
            
 }
