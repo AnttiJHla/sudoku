@@ -1,14 +1,24 @@
 import { Cell } from '../classes/cell';
-import { RowGroup } from '../classes/rowgroup';
-import { ColGroup } from '../classes/colgroup';
-import { BlockGroup } from '../classes/blockgroup';
+// import { RowGroup } from '../classes/rowgroup';
+// import { ColGroup } from '../classes/colgroup';
+// import { BlockGroup } from '../classes/blockgroup';
+
+import { Rowsolver } from '../classes/rowsolver';
+import { Colsolver } from '../classes/colsolver';
+import { Blocksolver } from '../classes/blocksolver';
+import { CellGroup } from '../classes/cellgroup';
+
 
 export class Matrix {
     
     cells : Cell[][];
-    rowGroups : RowGroup[] = [];
-    colGroups : ColGroup[] = [];
-    blockGroups : BlockGroup[] = [];
+    // rowGroups : RowGroup[] = [];
+    // colGroups : ColGroup[] = [];
+    // blockGroups : BlockGroup[] = [];
+
+    rowGroups : CellGroup[] = [];
+    colGroups : CellGroup[] = [];
+    blockGroups : CellGroup[] = [];
     
     constructor( values : number[] ) {
         this.initCellGroups();
@@ -23,10 +33,16 @@ export class Matrix {
     }
 
     initCellGroups(  ) {
+        let rowSolver = new Rowsolver();
+        let colSolver = new Colsolver();
+        let blockSolver = new Blocksolver();
         for ( let i = 1; i <= 9; i++ ) {
-            this.rowGroups[i] = new RowGroup();
-            this.colGroups[i] = new ColGroup();
-            this.blockGroups[i] = new BlockGroup();
+            // this.rowGroups[i] = new RowGroup();
+            // this.colGroups[i] = new ColGroup();
+            // this.blockGroups[i] = new BlockGroup();
+            this.rowGroups[i] = new CellGroup(rowSolver);
+            this.colGroups[i] = new CellGroup(colSolver);
+            this.blockGroups[i] = new CellGroup(blockSolver);
         }
     }
 
