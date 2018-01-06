@@ -23,6 +23,20 @@ export class MatrixComponent implements OnInit {
     0,0,0, 0,0,0, 0,0,0,
 
   ];
+  matrixVals_l5_5 : number [] = [
+    3,0,0, 4,0,7, 0,5,0,
+    2,0,0, 0,5,0, 3,0,0,
+    1,5,0, 6,0,0, 0,0,0,
+
+    6,7,1, 0,0,5, 0,0,0,
+    0,0,0, 0,0,0, 0,0,0,
+    0,0,0, 7,0,0, 1,6,3,
+
+    0,0,0, 0,0,1, 0,8,9,
+    0,0,2, 0,9,0, 0,0,5,
+    0,9,0, 5,0,3, 0,0,4,
+
+  ];
   matrixVals_l5_4 : number [] = [
     5,0,3, 0,1,0, 0,0,0,
     0,0,0, 0,0,0, 2,0,0,
@@ -110,7 +124,7 @@ export class MatrixComponent implements OnInit {
 
 
   @Input()
-  matrix : Matrix = new Matrix (this.matrixVals_l5_4);
+  matrix : Matrix = new Matrix (this.matrixVals_l5_5);
 
 
 
