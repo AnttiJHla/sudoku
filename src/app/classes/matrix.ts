@@ -6,20 +6,20 @@ import { Cell } from '../classes/cell';
 import { Rowsolver } from '../classes/rowsolver';
 import { Colsolver } from '../classes/colsolver';
 import { Blocksolver } from '../classes/blocksolver';
+
+import { Changetracker } from '../classes/changetracker';
+
+
 import { CellGroup } from '../classes/cellgroup';
 
 
 export class Matrix {
     
     cells : Cell[][];
-    // rowGroups : RowGroup[] = [];
-    // colGroups : ColGroup[] = [];
-    // blockGroups : BlockGroup[] = [];
-
     rowGroups : CellGroup[] = [];
     colGroups : CellGroup[] = [];
     blockGroups : CellGroup[] = [];
-    
+   
     constructor( values : number[] ) {
         this.initCellGroups();
         this.cells=[];
@@ -36,13 +36,12 @@ export class Matrix {
         let rowSolver = new Rowsolver();
         let colSolver = new Colsolver();
         let blockSolver = new Blocksolver();
+        let tracker = new Changetracker();
+
         for ( let i = 1; i <= 9; i++ ) {
-            // this.rowGroups[i] = new RowGroup();
-            // this.colGroups[i] = new ColGroup();
-            // this.blockGroups[i] = new BlockGroup();
-            this.rowGroups[i] = new CellGroup(rowSolver);
-            this.colGroups[i] = new CellGroup(colSolver);
-            this.blockGroups[i] = new CellGroup(blockSolver);
+            this.rowGroups[i] = new CellGroup( rowSolver, tracker );
+            this.colGroups[i] = new CellGroup( colSolver, tracker );
+            this.blockGroups[i] = new CellGroup( blockSolver, tracker );
         }
     }
 
@@ -54,11 +53,26 @@ export class Matrix {
     }
 
     solve(){
+        console.log("------------------------------");
+        console.log("Solving cell groups:");
+        console.log("------------------------------");
         for ( let i = 1; i <= 9; i++ ) {
             console.log("Block num: " + i);
             this.rowGroups[i].solve();
             this.colGroups[i].solve();
             this.blockGroups[i].solve();
+        }
+        this.trackChanges();
+    }
+    trackChanges(){
+        console.log("------------------------------");
+        console.log("Tracking changes:");
+        console.log("------------------------------");
+        for ( let i = 1; i <= 9; i++ ) {
+            console.log("Block num: " + i);
+            this.rowGroups[i].trackchanges();
+            this.colGroups[i].trackchanges();
+            this.blockGroups[i].trackchanges();
         }
     }
 
