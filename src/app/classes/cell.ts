@@ -12,7 +12,7 @@ export class Cell {
     row : number;
     col : number;
     block : number;
-    initialized : boolean = false;
+    initialized : boolean = false; // used by GUI
 
     constructor(value: number, row : number, col : number )
     {
@@ -38,12 +38,15 @@ export class Cell {
         return col+(row-1)*3;        
     }
 
-    getParam( param : string ) : number {
-        let ret = 0;
+    getParam( param : string ) : any {
+        let ret = null;
         switch (param) {
         case "row": ret = this.row; break;
         case "col": ret = this.col; break;
         case "block": ret = this.block; break;
+        case "pvals": ret = this.pvals; break;
+        case "colValues": ret = this.colValues; break;
+        case "rowValues": ret = this.rowValues; break;
         }
         return ret;
     }
