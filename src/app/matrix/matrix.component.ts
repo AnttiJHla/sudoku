@@ -125,15 +125,59 @@ export class MatrixComponent implements OnInit {
 
   @Input()
   matrix : Matrix = new Matrix (this.matrixVals_l5_5);
-
-
+  matrixName : string;
+  selection : number = 1;
+  matrixes = [];
 
   constructor(private _ngZone: NgZone) {}
   
+  init() {
 
-  ngOnInit() {
   }
 
+  ngOnInit() {
+
+    this.matrixes = [];
+
+    this.matrixes.push({ 
+      "values": this.matrixVals_l0, 
+      "name" : "matrixVals_l0"
+    });
+    this.matrixes.push({ 
+      "values": this.matrixVals_l5_5, 
+      "name" : "matrixVals_l5_5"
+    });
+    this.matrixes.push({ 
+      "values": this.matrixVals_l5_4, 
+      "name" : "matrixVals_l5_4"
+    });
+    this.matrixes.push({ 
+      "values": this.matrixVals_l5_3, 
+      "name" : "matrixVals_l5_3"
+    });
+    this.matrixes.push({ 
+      "values": this.matrixVals_l5_2, 
+      "name" : "matrixVals_l5_2"
+    });
+    this.matrixes.push({ 
+      "values": this.matrixVals_l5, 
+      "name" : "matrixVals_l5"
+    });
+    this.matrixes.push({ 
+      "values": this.matrixVals_l3, 
+      "name" : "matrixVals_l3"
+    });
+    this.matrixes.push({ 
+      "values": this.matrixVals_l2, 
+      "name" : "matrixVals_l2"
+    });
+
+    let matrix = this.matrixes[this.selection];
+    this.matrix = new Matrix ( matrix.values );
+    this.matrixName = matrix.name;
+
+    
+  }
 
   getCellClass(cell: Cell) : string[] {
     var retVal : string[] = [];
@@ -162,7 +206,20 @@ export class MatrixComponent implements OnInit {
     this.matrix.solve();
 
   }
+  checkIfOk (){
+    // Should check if matrix solution is ok.
+  }
 
+  select (){
+    this.selection = this.selection + 1;
+    if (this.selection >= this.matrixes.length) {
+      this.selection = 0;
+    }
+    let matrix = this.matrixes[this.selection];
+    this.matrix = new Matrix ( matrix.values );
+    this.matrixName = matrix.name;
+
+  }
 
 
 }

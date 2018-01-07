@@ -1,6 +1,12 @@
 <div class="container">
   <div class="matrix-menu">
-      <button (click)="solve()">Ratkaise </button>
+    <button (click)="solve()">Ratkaise </button>
+    <button (click)="init()">Alusta </button>
+    <button (click)="checkIfOk()"> Tarkista </button>
+    <button (click)="select()"> Valtse matriisi </button>
+    <hr>
+    <div>Selected matrix: {{ matrixName }}</div>
+    <hr>
   </div>
     
   <div class="matrix">
