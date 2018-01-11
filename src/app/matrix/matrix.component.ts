@@ -23,6 +23,20 @@ export class MatrixComponent implements OnInit {
     0,0,0, 0,0,0, 0,0,0,
 
   ];
+  matrixVals_l5_6: number [] = [
+    0,0,0, 0,1,0, 0,0,5,
+    7,0,0, 9,0,0, 8,1,0,
+    0,1,9, 0,0,4, 0,6,0,
+
+    0,9,0, 6,4,0, 0,0,2,
+    0,0,0, 0,0,0, 0,0,0,
+    5,0,0, 0,7,2, 0,4,0,
+
+    0,4,0, 8,0,0, 5,7,0,
+    0,7,6, 0,0,5, 0,0,1,
+    2,0,0, 0,9,0, 0,0,0,
+
+  ];
   matrixVals_l5_5 : number [] = [
     3,0,0, 4,0,7, 0,5,0,
     2,0,0, 0,5,0, 3,0,0,
@@ -124,7 +138,7 @@ export class MatrixComponent implements OnInit {
 
 
   @Input()
-  matrix : Matrix = new Matrix (this.matrixVals_l5_5);
+  matrix : Matrix = new Matrix (this.matrixVals_l5_6);
   matrixName : string;
   selection : number = 1;
   matrixes = [];
@@ -132,7 +146,9 @@ export class MatrixComponent implements OnInit {
   constructor(private _ngZone: NgZone) {}
   
   init() {
-
+    let m = this.matrixes[this.selection];
+    this.matrix = new Matrix ( m.values );
+    this.matrixName = m.name;
   }
 
   ngOnInit() {
@@ -142,6 +158,10 @@ export class MatrixComponent implements OnInit {
     this.matrixes.push({ 
       "values": this.matrixVals_l0, 
       "name" : "matrixVals_l0"
+    });
+    this.matrixes.push({ 
+      "values": this.matrixVals_l5_6, 
+      "name" : "matrixVals_l5_6"
     });
     this.matrixes.push({ 
       "values": this.matrixVals_l5_5, 
@@ -172,11 +192,8 @@ export class MatrixComponent implements OnInit {
       "name" : "matrixVals_l2"
     });
 
-    let matrix = this.matrixes[this.selection];
-    this.matrix = new Matrix ( matrix.values );
-    this.matrixName = matrix.name;
+    this.init();
 
-    
   }
 
   getCellClass(cell: Cell) : string[] {
@@ -210,7 +227,13 @@ export class MatrixComponent implements OnInit {
     // Should check if matrix solution is ok.
   }
 
-  select (){
+  select (matrix){
+    this.matrix = new Matrix ( matrix.values );
+    this.matrixName = matrix.name;
+    this.solve(); // Tries to help a bit..
+
+  }
+  old_select (){
     this.selection = this.selection + 1;
     if (this.selection >= this.matrixes.length) {
       this.selection = 0;

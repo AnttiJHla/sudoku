@@ -3,16 +3,26 @@
     <button (click)="solve()">Ratkaise </button>
     <button (click)="init()">Alusta </button>
     <button (click)="checkIfOk()"> Tarkista </button>
-    <button (click)="select()"> Valtse matriisi </button>
+    <!--button (click)="select()"> Valtse matriisi </button-->
     <hr>
     <div>Selected matrix: {{ matrixName }}</div>
     <hr>
   </div>
-    
-  <div class="matrix">
+
+  <div class="wrapper">
+    <div class="matrixlist btn-group-vertical">
+        <button   type="button" class="btn" *ngFor="let matrix of matrixes" (click)="select(matrix)">
+          {{matrix.name}} Lvl: {{matrix.level}}
+        </button>
+    </div>  
+
+    <div class="matrix">
       <div *ngFor="let cells_on_row of matrix.cells">
-        <app-cell class="cell" *ngFor="let cell of cells_on_row" [cell]="cell" [value]="cell.value" >
-        </app-cell>
+          <app-cell class="cell" *ngFor="let cell of cells_on_row" [cell]="cell" [value]="cell.value" >
+          </app-cell>
       </div>
+    </div>
+  </div>
+  
 
 </div>
