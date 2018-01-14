@@ -2,17 +2,16 @@
   <div class="matrix-menu">
     <button (click)="solve()">Ratkaise </button>
     <button (click)="init()">Alusta </button>
-    <button (click)="checkIfOk()"> Tarkista </button>
+    <!--button (click)="checkIfOk()"> Tarkista </button-->
     <!--button (click)="select()"> Valtse matriisi </button-->
-    <hr>
-    <div>Selected matrix: {{ matrixName }}</div>
     <hr>
   </div>
 
   <div class="wrapper">
-    <div class="matrixlist btn-group-vertical">
-        <button   type="button" class="btn" *ngFor="let matrix of matrixes" (click)="select(matrix)">
-          {{matrix.name}} Lvl: {{matrix.level}}
+    <div class="matrixlist">
+      <div><b>Selected matrix:</b> {{ matrixName }}</div>
+      <button type="button" class="mbtn btn-basic" *ngFor="let matrix of matrixes" (click)="select(matrix)">
+          {{matrix.name}}
         </button>
     </div>  
 

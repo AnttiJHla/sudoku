@@ -157,41 +157,41 @@ export class MatrixComponent implements OnInit {
 
     this.matrixes.push({ 
       "values": this.matrixVals_l0, 
-      "name" : "matrixVals_l0"
+      "name" : "Empty matrix"
     });
     this.matrixes.push({ 
       "values": this.matrixVals_l5_6, 
-      "name" : "matrixVals_l5_6"
+      "name" : "matrix l5 6"
     });
     this.matrixes.push({ 
       "values": this.matrixVals_l5_5, 
-      "name" : "matrixVals_l5_5"
+      "name" : "matrix l5 5"
     });
     this.matrixes.push({ 
       "values": this.matrixVals_l5_4, 
-      "name" : "matrixVals_l5_4"
+      "name" : "matrix l5 4"
     });
     this.matrixes.push({ 
       "values": this.matrixVals_l5_3, 
-      "name" : "matrixVals_l5_3"
+      "name" : "matrix l5 3"
     });
     this.matrixes.push({ 
       "values": this.matrixVals_l5_2, 
-      "name" : "matrixVals_l5_2"
+      "name" : "matrix l5 2"
     });
     this.matrixes.push({ 
       "values": this.matrixVals_l5, 
-      "name" : "matrixVals_l5"
+      "name" : "matrix l5"
     });
     this.matrixes.push({ 
       "values": this.matrixVals_l3, 
-      "name" : "matrixVals_l3"
+      "name" : "matrix l3"
     });
     this.matrixes.push({ 
       "values": this.matrixVals_l2, 
-      "name" : "matrixVals_l2"
+      "name" : "matrix l2"
     });
-
+    this.matrixes.reverse();
     this.init();
 
   }
