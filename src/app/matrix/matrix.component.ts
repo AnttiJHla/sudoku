@@ -23,6 +23,20 @@ export class MatrixComponent implements OnInit {
     0,0,0, 0,0,0, 0,0,0,
 
   ];
+  matrixVals_l5_7 : number [] = [
+    8,1,0, 2,0,4, 0,0,0,
+    9,0,0, 0,0,1, 0,0,4,
+    0,0,0, 5,3,0, 0,0,0,
+
+    0,4,0, 0,0,7, 0,9,0,
+    6,0,0, 0,0,0, 0,0,3,
+    0,2,0, 8,0,0, 0,4,0,
+
+    0,0,0, 0,6,2, 0,0,0,
+    4,0,0, 7,0,0, 0,0,8,
+    0,0,0, 9,0,8, 0,3,5,
+
+  ];
   matrixVals_l5_6: number [] = [
     0,0,0, 0,1,0, 0,0,5,
     7,0,0, 9,0,0, 8,1,0,
@@ -138,10 +152,11 @@ export class MatrixComponent implements OnInit {
 
 
   @Input()
-  matrix : Matrix = new Matrix (this.matrixVals_l5_6);
+  matrix : Matrix = new Matrix (this.matrixVals_l5_7);
   matrixName : string;
   selection : number = 1;
   matrixes = [];
+  showInstructions = false;
 
   constructor(private _ngZone: NgZone) {}
   
@@ -158,6 +173,10 @@ export class MatrixComponent implements OnInit {
     this.matrixes.push({ 
       "values": this.matrixVals_l0, 
       "name" : "Empty matrix"
+    });
+    this.matrixes.push({ 
+      "values": this.matrixVals_l5_7, 
+      "name" : "matrix l5 7"
     });
     this.matrixes.push({ 
       "values": this.matrixVals_l5_6, 
@@ -193,6 +212,7 @@ export class MatrixComponent implements OnInit {
     });
     this.matrixes.reverse();
     this.init();
+    this.solve();
 
   }
 
@@ -227,20 +247,14 @@ export class MatrixComponent implements OnInit {
     // Should check if matrix solution is ok.
   }
 
+  toggleVisibilityOfInstructions (){
+    this.showInstructions = ! this.showInstructions;
+  }
+
   select (matrix){
     this.matrix = new Matrix ( matrix.values );
     this.matrixName = matrix.name;
     this.solve(); // Tries to help a bit..
-
-  }
-  old_select (){
-    this.selection = this.selection + 1;
-    if (this.selection >= this.matrixes.length) {
-      this.selection = 0;
-    }
-    let matrix = this.matrixes[this.selection];
-    this.matrix = new Matrix ( matrix.values );
-    this.matrixName = matrix.name;
 
   }
 

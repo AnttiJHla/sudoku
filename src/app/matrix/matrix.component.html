@@ -1,10 +1,28 @@
 <div class="container">
   <div class="matrix-menu">
-    <button (click)="solve()">Ratkaise </button>
-    <button (click)="init()">Alusta </button>
+    <button (click)="solve()">Solve </button>
+    <button (click)="init()">Initialize matrix </button>
+    <button (click)="toggleVisibilityOfInstructions()">Show/hide instructions </button>
     <!--button (click)="checkIfOk()"> Tarkista </button-->
     <!--button (click)="select()"> Valtse matriisi </button-->
     <hr>
+    <div *ngIf="showInstructions" class="instructions">
+      <h3>Instructions:</h3>
+      <div>
+          <div>Matrix can be solved automatically step by step by clicking 'Solve' button. </div>
+          <div>Matrix can be initialized back to original values by clicking 'Initialize matrix' </div>
+          <div>Original cell values are shown with green color </div>          
+          <div>A new matrix can be selected by clicking one of the buttons under 'Select matrix'</div>
+          <div>- First round of 'solve' functionality is applied to matrix when it has been selected</div>
+          <div>- Selecting empty matrix allows you to build your own matrix, it cannot be saved.</div>
+          <div>Alternatively you can try to solve it manually by clicking the numbers on matrix cells</div>
+          <div>- Click a value to set value for cell. There is no undo functionality for selecting a value.</div>
+          <div>- Shift + Click a value to remove a possible value. </div>
+          <hr>
+
+
+      </div>
+    </div>
   </div>
 
   <div class="wrapper">
