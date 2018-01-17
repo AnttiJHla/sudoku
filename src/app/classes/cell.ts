@@ -1,10 +1,7 @@
-//import { CellGroup } from '../classes/cellgroup';
+import { CellTracker } from "./cell-tracker";
 
 export class Cell {
     value : number = 0;
-    // rowgrp: CellGroup;
-    // colgrp: CellGroup;
-    // blockgrp: CellGroup;
     pvals : number[] = []; // Possible values
 
     rowValues : number[] = []; // Values on this row only
@@ -13,31 +10,47 @@ export class Cell {
     col : number;
     block : number;
     initialized : boolean = false; // used by GUI
+    tracker : CellTracker;
 
-    constructor(value: number, row : number, col : number )
+    constructor(value: number, row : number, col : number, ct : CellTracker )
     {
         this.value = value;
         this.col = col;
         this.row = row;
         this.block = this.getBlock();
-        if (value === 0){
-            this.pvals = [];
-            for ( let i = 1; i <= 9; i++ ) {                    
-                this.pvals.push(i);
-            }
+        this.tracker = ct;
 
+        if ( value === 0 ){
+            this.createPvalsArray();
         } else{
             this.pvals = [value];
             this.initialized = true;
         }
+        this.saveState();
     }    
+    // --------------------------------------------------
+    createPvalsArray( ) {
+        this.pvals = [];
+        for ( let i = 1; i <= 9; i++ ) {                    
+            this.pvals.push(i);
+        }
+    }
+    // --------------------------------------------------
+    saveState( ) {
+        this.tracker.saveState( this );
+    }
+    // --------------------------------------------------
+    cellStateHasChanged( ) : boolean {        
+        return this.tracker.stateHasChanged( this );;
+    }
+    // --------------------------------------------------
     getBlock( ) : number {
         var tmp = [0,1,1,1,2,2,2,3,3,3];
         var col = tmp[this.col];
         var row = tmp[this.row];
         return col+(row-1)*3;        
     }
-
+    // --------------------------------------------------
     getParam( param : string ) : any {
         let ret = null;
         switch (param) {

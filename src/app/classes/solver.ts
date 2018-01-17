@@ -7,9 +7,21 @@ export class Solver {
     
     solve ( cg : CellGroup ) {
         this.cells = cg.cells;
-        this.cells.forEach(this.solver123, this);
-        this.values.forEach(this.solver4, this);
-        this.solver5();
+        //if (this.someCellsHaveStateChanges()){
+            this.cells.forEach(this.solver123, this);
+            this.values.forEach(this.solver4, this);
+            this.solver5();    
+        // } else {
+        //     console.log("Cell group did not have any changes");
+        // }
+
+    }
+    // ========================================================================
+    // Check if cell group cell states have changed
+    someCellsHaveStateChanges () : boolean {
+        return this.cells.some(
+            cell => cell.cellStateHasChanged()
+        );
     }
     // ========================================================================
     // If N values are present in N cells only, those values should be cleared 
